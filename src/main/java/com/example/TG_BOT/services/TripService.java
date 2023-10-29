@@ -20,14 +20,14 @@ public class TripService {
     }
 
     private void init() {
-        trips.add(new Trip(new Driver(), new ArrayList<>(), "Радиофак", new Date()));
+        trips.add(new Trip("", "", "Радиофак", new Date()));
     }
 
-    public List<Trip> getAllTrips(){
+    public List<Trip> getAllTrips() {
         return trips;
     }
 
-    public void saveTrip(Driver driver, List<Passenger> listPassenger, String destination, Date timeTrip){
+    public void saveTrip(String driver, String listPassenger, String destination, Date timeTrip) {
         Trip trip = new Trip(driver, listPassenger, destination, timeTrip);
         trips.add(trip);
     }
