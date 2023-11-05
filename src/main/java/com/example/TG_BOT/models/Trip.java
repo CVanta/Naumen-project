@@ -9,7 +9,7 @@ import java.util.Date;
 import java.util.List;
 
 @Entity
-@Table(name = "trips")
+@Table(name = "Trip2GreatComeback")
 public class Trip {
 
     @Id
