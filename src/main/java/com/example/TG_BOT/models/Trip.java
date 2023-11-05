@@ -18,10 +18,10 @@ public class Trip {
     private String driver;
     private String listPassenger;
     private String destination;
-    private Date timeTrip;
+    private String timeTrip;
 
 
-    public Trip(String driver, String listPassenger, String destination, Date timeTrip) {
+    public Trip(String driver, String listPassenger, String destination, String timeTrip) {
         this.driver = driver;
         this.listPassenger = listPassenger;
         this.destination = destination;
@@ -56,11 +56,11 @@ public class Trip {
         this.destination = destination;
     }
 
-    public Date getTimeTrip() {
+    public String getTimeTrip() {
         return timeTrip;
     }
 
-    private void setTimeTrip(Date timeTrip) {
+    private void setTimeTrip(String timeTrip) {
         this.timeTrip = timeTrip;
     }
 

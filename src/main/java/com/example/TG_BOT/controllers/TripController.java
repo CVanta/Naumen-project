@@ -26,9 +26,9 @@ public class TripController {
         return tripService.getAllTrips();
     }
 
-    @GetMapping(value = "save/{driver}/{listPassenger}/{destination}/{date}")
+    @GetMapping(value = "/save/{driver}/{listPassenger}/{destination}/{date}")
     @ResponseBody
-    public Trip save(@PathVariable String driver, @PathVariable String listPassenger, @PathVariable String destination, @PathVariable Date date) {
+    public Trip save(@PathVariable String driver, @PathVariable String listPassenger, @PathVariable String destination, @PathVariable String date) {
         return tripService.saveTrip(driver, listPassenger, destination, date);
     }
 

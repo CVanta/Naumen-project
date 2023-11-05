@@ -1,4 +1,4 @@
-package repositories;
+package com.example.TG_BOT.repositories;
 
 import com.example.TG_BOT.models.Trip;
 import org.springframework.data.repository.CrudRepository;
@@ -8,6 +8,6 @@ import java.util.List;
 
 @Repository
 public interface TripRepository extends CrudRepository<Trip, Long> {
-    List<Trip> findAllBy(Trip trip);
+    //List<Trip> findAllBy(Trip trip);
 
 }
