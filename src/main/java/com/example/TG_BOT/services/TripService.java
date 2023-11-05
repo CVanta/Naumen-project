@@ -3,32 +3,47 @@ package com.example.TG_BOT.services;
 import com.example.TG_BOT.models.Driver;
 import com.example.TG_BOT.models.Passenger;
 import com.example.TG_BOT.models.Trip;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
+import repositories.TripRepository;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 @Component
+@Service
+@EnableAutoConfiguration
 public class TripService {
 
-    private final List<Trip> trips;
+    private List<Trip> trips;
+    @Autowired
+    private TripRepository tripRepository;
+
+    @Autowired
+    public TripService(TripRepository tripRepository) {
+        this.tripRepository = tripRepository;
+
+    }
+
 
     public TripService(List<Trip> trips) {
         this.trips = trips;
-        init();
-    }
-
-    private void init() {
-        trips.add(new Trip("", "", "Радиофак", new Date()));
     }
 
     public List<Trip> getAllTrips() {
+        List<Trip> trips = new ArrayList<>();
+        tripRepository.findAll().forEach(trips::add);
         return trips;
     }
 
-    public void saveTrip(String driver, String listPassenger, String destination, Date timeTrip) {
+
+    public Trip saveTrip(String driver, String listPassenger, String destination, Date timeTrip) {
         Trip trip = new Trip(driver, listPassenger, destination, timeTrip);
-        trips.add(trip);
+        tripRepository.save(trip);
+        return trip;
     }
+
 }

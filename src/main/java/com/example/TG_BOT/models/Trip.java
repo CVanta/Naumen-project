@@ -3,11 +3,13 @@ package com.example.TG_BOT.models;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 
 import java.util.Date;
 import java.util.List;
 
 @Entity
+@Table(name = "trips")
 public class Trip {
 
     @Id
@@ -60,10 +62,6 @@ public class Trip {
 
     private void setTimeTrip(Date timeTrip) {
         this.timeTrip = timeTrip;
-    }
-
-    private void setId(Long id) {
-        this.id = id;
     }
 
     public Long getId() {
