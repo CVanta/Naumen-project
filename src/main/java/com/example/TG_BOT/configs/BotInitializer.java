@@ -20,6 +20,7 @@ public class BotInitializer {
         try {
             api.registerBot(bot);
         } catch (TelegramApiException exception) {
+
         }
     }
 }
