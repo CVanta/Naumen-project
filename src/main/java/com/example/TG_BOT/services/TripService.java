@@ -15,14 +15,14 @@ import java.util.List;
 public class TripService {
 
     private List<Trip> trips;
-    private final TripRepository tripRepository;
+    private static TripRepository tripRepository;
 
     @Autowired
     public TripService(TripRepository tripRepository) {
         this.tripRepository = tripRepository;
     }
 
-    public List<Trip> getAllTrips() {
+    public static List<Trip> getAllTrips() {
         List<Trip> trips = new ArrayList<>();
         tripRepository.findAll().forEach(trips::add);
         return trips;
@@ -34,5 +34,4 @@ public class TripService {
         tripRepository.save(trip);
         return trip;
     }
-
 }
