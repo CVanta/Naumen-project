@@ -12,8 +12,11 @@ public class User {
 
     private String username;
     private boolean isActive;
-
     private String chatID;
+
+    private String institute;
+
+    private long phoneNumber;
     @Id
     @GeneratedValue
     private Long id;
@@ -24,6 +27,8 @@ public class User {
     public User(String username, String chatID) {
         this.username = username;
         this.chatID = chatID;
+        this.institute = null;
+        this.phoneNumber = 0;
     }
 
     @ElementCollection(targetClass = Role.class, fetch = FetchType.EAGER)

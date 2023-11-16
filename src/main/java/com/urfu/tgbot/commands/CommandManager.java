@@ -35,20 +35,24 @@ public class CommandManager {
         States state = stateService.getState(chatId);
         String answer = messageText;
         switch (state) {
+            case null -> {
+                startCommand.changeState(chatId);
+                answer = startCommand.getBotText();
+            }
             case WAITING_FOR_INPUT_NAME -> {
                 try {
-                    nameEditor.editName(chatId, messageText);
+                    answer = nameEditor.editName(chatId, messageText);
                 } catch (Exception e) {
-                    throw new RuntimeException(e);
+                    return "Вы не изменили имя";
                 }
             }
+            //case WAITING_FOR_INPUT_INSTITUTE -> {
+                //answer =
+
+            //}
 
             case WAITING_FOR_COMMAND -> answer = readCommand(messageText, chatId);
 
-            default -> {
-                startCommand.changeState(chatId);
-                startCommand.getBotText();
-            }
         }
 
         return answer;
@@ -67,6 +71,9 @@ public class CommandManager {
             case "/list" -> {
                 return listCommand.getAllAvailableTrips();
             }
+//            case "/edit" ->{
+//
+//            }
             default -> {
                 if (String.valueOf(command.charAt(0)).equals("/")) return "Не удалось разпознать команду";
                 else {

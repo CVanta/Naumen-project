@@ -18,10 +18,17 @@ public class NameEditor {
         this.userService = userService;
     }
 
-    public void editName(long chatID, String name) throws Exception {
+    public String editName(long chatID, String name) throws Exception {
         User user = new User(name, Long.toString(chatID));
-        userService.addUser(user);
-        stateService.updateState(chatID, States.WAITING_FOR_COMMAND);
+        try {
+            userService.addUser(user);
+        }
+        catch (Exception e){
+            userService.deleteUser(user);
+            userService.addUser(user);
+        }
+        stateService.updateState(chatID, States.WAITING_FOR_INPUT_INSTITUTE);
+        return "Ваше имя успешно установлено.";
     }
 
 

@@ -47,6 +47,13 @@ public class UserService implements UserDetailService {
         userRepository.save(user);
     }
 
+    public void deleteUser(User user) throws Exception {
+        User userFromDb = userRepository.findByUsername(user.getUsername());
+        if (userFromDb == null)
+        {
+            throw new Exception("user not exist");
+        }
+        userRepository.delete(user);
 
-
+    }
 }
