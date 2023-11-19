@@ -12,23 +12,83 @@ public class User {
 
     private String username;
     private boolean isActive;
-    private String chatID;
+
+    @Id
+    private long chatID;
 
     private String institute;
 
     private long phoneNumber;
-    @Id
-    @GeneratedValue
-    private Long id;
 
     public User() {
     }
 
-    public User(String username, String chatID) {
+    public User(long chatID) {
+        this.chatID = chatID;
+    }
+
+    public User(String username, long chatID) {
         this.username = username;
         this.chatID = chatID;
-        this.institute = null;
-        this.phoneNumber = 0;
+    }
+
+    public String getInstitute() {
+        return institute;
+    }
+
+    public long getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public static class Builder {
+        private String username;
+        private long chatID;
+        private String institute;
+        private long phoneNumber;
+
+        public Builder(long chatID) {
+            this.chatID = chatID;
+        }
+
+
+        public Builder chatID(long chatID) {
+            this.chatID = chatID;
+            return this;
+        }
+
+
+        public long getPhoneNumber() {
+            return phoneNumber;
+        }
+
+        public Builder username(String username) {
+            this.username = username;
+            return this;
+        }
+
+        public Builder institute(String institute) {
+            this.institute = institute;
+            return this;
+        }
+
+        public Builder phoneNumber(long phoneNumber) {
+            this.phoneNumber = phoneNumber;
+            return this;
+        }
+
+        public User build() {
+            User user = new User();
+            user.username = this.username;
+            user.chatID = this.chatID;
+            user.institute = this.institute;
+            user.phoneNumber = this.phoneNumber;
+            return user;
+        }
+    }
+
+    @Override
+    public String toString() {
+        return " ФИО: " + username + " Номер телефона: " + phoneNumber + " Институт: " + institute;
     }
 
     @ElementCollection(targetClass = Role.class, fetch = FetchType.EAGER)
@@ -57,7 +117,7 @@ public class User {
         return isActive;
     }
 
-    public String  getChatID() {
+    public long getChatID() {
         return this.chatID;
     }
 }

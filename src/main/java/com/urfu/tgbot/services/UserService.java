@@ -28,7 +28,7 @@ public class UserService implements UserDetailService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         User myUser = userRepository.findByUsername(username);
-        return new org.springframework.security.core.userdetails.User(myUser.getUsername(), myUser.getChatID(), mapRolesToAthorities(myUser.getRoles()));
+        return new org.springframework.security.core.userdetails.User(myUser.getUsername(), Long.toString(myUser.getChatID()), mapRolesToAthorities(myUser.getRoles()));
     }
 
     private List<? extends GrantedAuthority> mapRolesToAthorities(Set<Role> roles)
@@ -48,12 +48,14 @@ public class UserService implements UserDetailService {
     }
 
     public void deleteUser(User user) throws Exception {
-        User userFromDb = userRepository.findByUsername(user.getUsername());
-        if (userFromDb == null)
-        {
+        User userFromDb = userRepository.findById(user.getChatID()).get();
+        if (userFromDb == null) {
             throw new Exception("user not exist");
         }
         userRepository.delete(user);
+    }
 
+    public User getUserByChatID(long chatID) {
+        return userRepository.findById(chatID).get();
     }
 }

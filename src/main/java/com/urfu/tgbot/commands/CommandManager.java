@@ -46,10 +46,20 @@ public class CommandManager {
                     return "Вы не изменили имя";
                 }
             }
-            //case WAITING_FOR_INPUT_INSTITUTE -> {
-                //answer =
-
-            //}
+            case WAITING_FOR_INPUT_INSTITUTE -> {
+                try {
+                    answer = nameEditor.editInstitute(chatId, messageText);
+                } catch (Exception e) {
+                    return "Вы не изменили институт";
+                }
+            }
+            case WAITING_FOR_INPUT_PHONE_NUMBER -> {
+                try {
+                    answer = nameEditor.editPhoneNumber(chatId, messageText);
+                } catch (Exception e) {
+                    return "Вы не изменили номер телефона";
+                }
+            }
 
             case WAITING_FOR_COMMAND -> answer = readCommand(messageText, chatId);
 
