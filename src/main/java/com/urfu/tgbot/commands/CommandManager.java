@@ -20,14 +20,17 @@ public class CommandManager {
 
     private final NameEditor nameEditor;
 
+    private final EditCommand editCommand;
+
 
     @Autowired
-    public CommandManager(StartCommand startCommand, HelpCommand helpCommand, ListCommand listCommand, StateService stateService, NameEditor nameEditor) {
+    public CommandManager(StartCommand startCommand, HelpCommand helpCommand, ListCommand listCommand, StateService stateService, NameEditor nameEditor, EditCommand editCommand) {
         this.startCommand = startCommand;
         this.helpCommand = helpCommand;
         this.listCommand = listCommand;
         this.stateService = stateService;
         this.nameEditor = nameEditor;
+        this.editCommand = editCommand;
     }
 
 
@@ -61,6 +64,8 @@ public class CommandManager {
                 }
             }
 
+            case WAITING_FOR_INPUT_EDIT_CONFIRMATION -> answer = editCommand.handleConfirmInput(messageText, chatId);
+
             case WAITING_FOR_COMMAND -> answer = readCommand(messageText, chatId);
 
         }
@@ -81,15 +86,16 @@ public class CommandManager {
             case "/list" -> {
                 return listCommand.getAllAvailableTrips();
             }
-//            case "/edit" ->{
-//
-//            }
-            default -> {
-                if (String.valueOf(command.charAt(0)).equals("/")) return "Не удалось разпознать команду";
-                else {
-                    return "Ваше сообщение: " + command;
-                }
+            case "/edit" -> {
+                editCommand.updateState(chatID);
+                return editCommand.getBotText(chatID);
             }
+                default -> {
+                    if (String.valueOf(command.charAt(0)).equals("/")) return "Не удалось разпознать команду";
+                    else {
+                        return "Ваше сообщение: " + command;
+                    }
+                }
         }
     }
 }

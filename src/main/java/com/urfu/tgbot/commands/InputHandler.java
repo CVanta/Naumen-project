@@ -1,7 +1,7 @@
 package com.urfu.tgbot.commands;
 
 /**
- * Класс для обработки входных данных, включая проверку ФИО, номера телефона и института.
+ * Класс для обработки входных данных, включая проверку ФИО, номера телефона, института и т.д.
  */
 public class InputHandler {
 
@@ -60,5 +60,20 @@ public class InputHandler {
             throw new IllegalArgumentException("Введенное значение не соответствует формату института");
         }
     }
+
+
+    /**
+     * Проверяет, что полученная строка является "Да" или "Нет".
+     *
+     * @param input Строка для проверки
+     * @throws IllegalArgumentException если строка не является "Да" или "Нет"
+     */
+    public void checkYesNo(String input) {
+        if (!input.equalsIgnoreCase("Да") && !input.equalsIgnoreCase("Нет")) {
+            throw new IllegalArgumentException("Строка должна быть 'Да' или 'Нет'");
+        }
+    }
 }
+
+
 

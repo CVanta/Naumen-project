@@ -88,7 +88,7 @@ public class User {
 
     @Override
     public String toString() {
-        return " ФИО: " + username + " Номер телефона: " + phoneNumber + " Институт: " + institute;
+        return " ФИО: " + username + "\n Номер телефона: " + phoneNumber + "\n Институт: " + institute;
     }
 
     @ElementCollection(targetClass = Role.class, fetch = FetchType.EAGER)
