@@ -16,7 +16,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 @Component
-public class UserService implements UserDetailService {
+public class UserService {
     private final UserRepository userRepository;
 
     @Autowired
@@ -24,25 +24,11 @@ public class UserService implements UserDetailService {
         this.userRepository = userRepository;
     }
 
-
-    @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User myUser = userRepository.findByUsername(username);
-        return new org.springframework.security.core.userdetails.User(myUser.getUsername(), Long.toString(myUser.getChatID()), mapRolesToAthorities(myUser.getRoles()));
-    }
-
-    private List<? extends GrantedAuthority> mapRolesToAthorities(Set<Role> roles)
-    {
-        return roles.stream().map(r -> new SimpleGrantedAuthority("ROLE_" + r.name())).collect(Collectors.toList());
-    }
-    public void addUser(User user) throws Exception
-    {
+    public void addUser(User user) throws Exception {
         User userFromDb = userRepository.findByUsername(user.getUsername());
-        if (userFromDb != null)
-        {
+        if (userFromDb != null) {
             throw new Exception("user exist");
         }
-        user.setRoles(Collections.singleton(Role.USER));
         user.setActive(true);
         userRepository.save(user);
     }

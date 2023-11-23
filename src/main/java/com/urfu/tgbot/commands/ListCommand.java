@@ -13,7 +13,9 @@ public class ListCommand {
         StringBuilder result = new StringBuilder();
 
         for (Trip trip : trips) {
-            result.append(trip.getDriver()).append(" to ");
+            result.append(trip.getFreePlaces()).append(" with ");
+            result.append(trip.getDriverID()).append(" at ");
+            result.append(trip.getTimeTrip()).append(" to ");
             result.append(trip.getDestination()).append(" | ");
         }
         return result.toString();

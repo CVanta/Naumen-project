@@ -22,15 +22,21 @@ public class CommandManager {
 
     private final EditCommand editCommand;
 
+    private final AddCommand addCommand;
+
+    private final AddingTrip addingTrip;
+
 
     @Autowired
-    public CommandManager(StartCommand startCommand, HelpCommand helpCommand, ListCommand listCommand, StateService stateService, NameEditor nameEditor, EditCommand editCommand) {
+    public CommandManager(StartCommand startCommand, HelpCommand helpCommand, ListCommand listCommand, StateService stateService, NameEditor nameEditor, EditCommand editCommand, AddCommand addCommand, AddingTrip addingTrip) {
         this.startCommand = startCommand;
         this.helpCommand = helpCommand;
         this.listCommand = listCommand;
         this.stateService = stateService;
         this.nameEditor = nameEditor;
         this.editCommand = editCommand;
+        this.addCommand = addCommand;
+        this.addingTrip = addingTrip;
     }
 
 
@@ -63,7 +69,18 @@ public class CommandManager {
                     return "Вы не изменили номер телефона";
                 }
             }
+            case WAITING_FOR_INPUT_TIME -> {
+                return addingTrip.addTimeTrip(chatId, messageText);
+            }
 
+            case WAITING_FOR_INPUT_PLACES -> {
+                return addingTrip.addPlacesTrip(chatId, messageText);
+            }
+
+            case WAITING_FOR_INPUT_DESTINATION -> {
+                return addingTrip.addDriverDestinationTrip(chatId, messageText);
+
+            }
             case WAITING_FOR_INPUT_EDIT_CONFIRMATION -> answer = editCommand.handleConfirmInput(messageText, chatId);
 
             case WAITING_FOR_COMMAND -> answer = readCommand(messageText, chatId);
@@ -90,12 +107,16 @@ public class CommandManager {
                 editCommand.updateState(chatID);
                 return editCommand.getBotText(chatID);
             }
-                default -> {
-                    if (String.valueOf(command.charAt(0)).equals("/")) return "Не удалось разпознать команду";
-                    else {
-                        return "Ваше сообщение: " + command;
-                    }
+            case "/add" -> {
+                addCommand.updateState(chatID);
+                return addCommand.getBotText();
+            }
+            default -> {
+                if (String.valueOf(command.charAt(0)).equals("/")) return "Не удалось разпознать команду";
+                else {
+                    return "Ваше сообщение: " + command;
                 }
+            }
         }
     }
 }

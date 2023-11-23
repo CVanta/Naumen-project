@@ -30,17 +30,15 @@ public class StateService {
     }
 
 
-    public State saveState(Long chatID, States state) {
+    public void saveState(Long chatID, States state) {
         State newState = new State(chatID, state);
         statesRepository.save(newState);
-        return newState;
     }
 
-    public State updateState(Long chatID, States state) {
+    public void updateState(Long chatID, States state) {
         State newState = new State(chatID, state);
         statesRepository.deleteById(chatID);
         statesRepository.save(newState);
-        return newState;
     }
 
     public States getState(Long chatID) {

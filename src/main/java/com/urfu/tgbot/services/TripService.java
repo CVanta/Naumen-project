@@ -7,7 +7,10 @@ import org.springframework.stereotype.Service;
 import com.urfu.tgbot.repositories.TripRepository;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Stream;
+import java.util.stream.StreamSupport;
 
 @Component
 @Service
@@ -28,9 +31,29 @@ public class TripService {
     }
 
 
-    public Trip saveTrip(String driver, String listPassenger, String destination, String timeTrip) {
-        Trip trip = new Trip(driver, listPassenger, destination, timeTrip);
+    public Trip saveTrip(long driverID, String listPassenger, String destination, String timeTrip, int freePlaces) {
+        Trip trip = new Trip(driverID, listPassenger, destination, timeTrip, freePlaces);
         tripRepository.save(trip);
         return trip;
+    }
+
+    public void addTrip(Trip trip){
+        if (tripRepository.findById(trip.getId()).isPresent()){
+            throw new IllegalArgumentException("trip exist");
+        }
+        tripRepository.save(trip);
+    }
+
+    public void deleteTrip(Trip trip){
+        if (tripRepository.findById(trip.getId()).isEmpty()){
+            throw new IllegalArgumentException("trip not exist");
+        }
+        tripRepository.delete(trip);
+    }
+
+    public Trip getLastTripChatID(long chatID){
+        Iterable<Trip> iterable = () -> tripRepository.findAll().iterator();
+        Stream<Trip> stream = StreamSupport.stream(iterable.spliterator(), false);
+        return stream.filter(x -> x.getDriverID() == chatID).max(Comparator.comparing(x -> x.getId())).get();
     }
 }

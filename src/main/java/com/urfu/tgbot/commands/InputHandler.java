@@ -1,5 +1,8 @@
 package com.urfu.tgbot.commands;
 
+import javax.xml.crypto.Data;
+import java.util.Date;
+
 /**
  * Класс для обработки входных данных, включая проверку ФИО, номера телефона, института и т.д.
  */
@@ -71,6 +74,38 @@ public class InputHandler {
     public void checkYesNo(String input) {
         if (!input.equalsIgnoreCase("Да") && !input.equalsIgnoreCase("Нет")) {
             throw new IllegalArgumentException("Строка должна быть 'Да' или 'Нет'");
+        }
+    }
+
+    /**
+     * Метод, выполняющий проверку строки на соответствие формату "DD-MM-YY HH:MM".
+     *
+     * @param dateString Строка для проверки.
+     * @throws IllegalArgumentException Если строка не соответствует формату "DD-MM-YY HH:MM".
+     */
+    public void checkDateFormat(String dateString) throws IllegalArgumentException {
+        String regex = "^(0[1-9]|[12][0-9]|3[01])-(0[1-9]|1[0-2])-(\\d{2})\\s([01][0-9]|2[0-3]):([0-5][0-9])$";
+        if (!dateString.matches(regex)) {
+            throw new IllegalArgumentException("Неверный формат даты и времени");
+        }
+    }
+
+    /**
+     * Метод, выполняющий проверку строки на то, является ли она числом меньше 10.
+     *
+     * @param numberString Строка для проверки.
+     * @throws IllegalArgumentException Если строка не является числом меньше 10.
+     * @throws NumberFormatException    Если строка не может быть преобразована в число.
+     */
+
+    public void checkPlaces(String numberString) throws IllegalArgumentException, NumberFormatException {
+        try {
+            int number = Integer.parseInt(numberString);
+            if (number >= 10) {
+                throw new IllegalArgumentException("Число должно быть меньше 10");
+            }
+        } catch (NumberFormatException e) {
+            throw new NumberFormatException("Невозможно преобразовать в число");
         }
     }
 }
