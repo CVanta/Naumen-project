@@ -24,26 +24,29 @@ public class SignUpCommand {
         this.tripService = tripService;
         this.userService = userService;
     }
-    public String getBotText(){
-        return "АБОБАБОБАБОБАБОБАБОБАБОБА";
-    }
 
     public void changeState(long chatID) {
         stateService.updateState(chatID, States.WAITING_FOR_COMMAND);
     }
 
-    public String registerUser(int numberTrip, long chatID){
-        if (numberTrip == 0)
-        {
+    public String registerUser(int numberTrip, long chatID) {
+        if (numberTrip == 0) {
             stateService.updateState(chatID, States.WAITING_FOR_COMMAND);
             return "Вы вышли";
         }
         List<Trip> allTrips = tripService.getTripsWithPassengersMoreThanZero();
+        if (numberTrip - 1 > allTrips.size())
+            return "Номера поездки нет в списке";
         Trip trip = allTrips.get(numberTrip - 1);
-        User user = new User(chatID);
+        if (trip.getDriverID() == chatID)
+            return "Вы не можете записаться на свою поездку!";
+        User user = userService.getUserByChatID(chatID);
+        if (user.getTripList().contains(trip)) {
+            return "Вы не можете записаться на поездку дважды!";
+        }
         tripService.addUserToTrip(trip, user);
-        tripService.decrementFreePlaces(trip);
         userService.addTripToUser(trip, user);
+        changeState(chatID);
         return "Вы записались на поездку: " + trip.getFormattedString();
     }
 

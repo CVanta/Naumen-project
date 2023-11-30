@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Entity
 @Table(name = "trips")
@@ -18,7 +19,7 @@ public class Trip {
     private String timeTrip;
     private int freePlaces;
 
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.EAGER, mappedBy = "tripList")
     private List<User> passengers = new ArrayList<>();
 
     public Trip(long driverID, String listPassenger, String destination, String timeTrip, int freePlaces) {
@@ -144,5 +145,20 @@ public class Trip {
 
     public void deletePassenger(User user){
         passengers.remove(user);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Trip trip = (Trip) o;
+
+        return Objects.equals(id, trip.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return id != null ? id.hashCode() : 0;
     }
 }

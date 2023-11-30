@@ -28,12 +28,13 @@ public class ListCommand {
         String result = "";
         int num = 1;
         for (Trip trip : trips) {
-            String t_string = trip.getTimeTrip() + " " +
+            String tString = trip.getTimeTrip() + " " +
                     trip.getDestination() + " мест:" +
                     trip.getFreePlaces();
-            result += num + ". " + t_string + "\n";
+            result += num + ". " + tString + "\n";
             num += 1;
         }
+        result += "0 - для выхода в режим комманд";
         return result;
     }
 

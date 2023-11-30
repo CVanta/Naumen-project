@@ -55,6 +55,13 @@ public class TripService {
         tripRepository.delete(trip);
     }
 
+
+    public List<Trip> getAllTripsByChatId(long chatID){
+        Iterable<Trip> iterable = () -> tripRepository.findAll().iterator();
+        Stream<Trip> stream = StreamSupport.stream(iterable.spliterator(), false);
+        return stream.filter(x -> x.getDriverID() == chatID).max(Comparator.comparing(Trip::getId)).stream().toList();
+    }
+
     public Trip getLastTripChatID(long chatID) {
         Iterable<Trip> iterable = () -> tripRepository.findAll().iterator();
         Stream<Trip> stream = StreamSupport.stream(iterable.spliterator(), false);
@@ -62,15 +69,9 @@ public class TripService {
     }
 
     public void addUserToTrip(Trip trip, User user) {
-        tripRepository.delete(trip);
         trip.addPassenger(user);
-        tripRepository.save(trip);
-    }
-
-    public void decrementFreePlaces(Trip trip) {
-        tripRepository.delete(trip);
         trip.decrementFreePlaces();
+        user.addTrip(trip);
         tripRepository.save(trip);
     }
-
 }

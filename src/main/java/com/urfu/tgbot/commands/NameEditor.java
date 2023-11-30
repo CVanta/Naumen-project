@@ -18,8 +18,8 @@ public class NameEditor {
         this.userService = userService;
     }
 
-    public String editName(long chatID, String name) throws Exception {
-        User user = new User(name, chatID);
+    public String editName(long chatID, String name, String username) throws Exception {
+        User user = new User(name, chatID, username);
         InputHandler inputHandler = new InputHandler();
         try {
             inputHandler.checkFullName(name);
@@ -46,6 +46,7 @@ public class NameEditor {
         User user = userService.getUserByChatID(chatID);
         User newUser = new User.Builder(chatID)
                 .username(user.getUsername())
+                .tgUsername(user.getTgUsername())
                 .phoneNumber(user.getPhoneNumber())
                 .institute(institute)
                 .build();
@@ -65,7 +66,7 @@ public class NameEditor {
         User user = userService.getUserByChatID(chatID);
         User newUser = new User.Builder(chatID)
                 .username(user.getUsername())
-                .institute(user.getInstitute())
+                .tgUsername(user.getTgUsername())
                 .phoneNumber(Long.parseLong(phoneNumber))
                 .build();
         userService.deleteUser(newUser);

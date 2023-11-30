@@ -28,10 +28,14 @@ public class CommandManager {
 
     private final SignUpCommand signUpCommand;
 
+    private final ProfileCommand profileCommand;
+
     private final ViewCommand viewCommand;
 
+    private final ShowCommand showCommand;
+
     @Autowired
-    public CommandManager(StartCommand startCommand, HelpCommand helpCommand, ListCommand listCommand, StateService stateService, NameEditor nameEditor, EditCommand editCommand, AddCommand addCommand, AddingTrip addingTrip, SignUpCommand signUpCommand, ViewCommand viewCommand) {
+    public CommandManager(StartCommand startCommand, HelpCommand helpCommand, ListCommand listCommand, StateService stateService, NameEditor nameEditor, EditCommand editCommand, AddCommand addCommand, AddingTrip addingTrip, SignUpCommand signUpCommand, ProfileCommand profileCommand, ViewCommand viewCommand, ShowCommand showCommand) {
         this.startCommand = startCommand;
         this.helpCommand = helpCommand;
         this.listCommand = listCommand;
@@ -41,11 +45,13 @@ public class CommandManager {
         this.addCommand = addCommand;
         this.addingTrip = addingTrip;
         this.signUpCommand = signUpCommand;
+        this.profileCommand = profileCommand;
         this.viewCommand = viewCommand;
+        this.showCommand = showCommand;
     }
 
 
-    public String readInput(String messageText, long chatId) {
+    public String readInput(String messageText, long chatId, String username) {
         States state = stateService.getState(chatId);
         String answer = messageText;
         switch (state) {
@@ -55,7 +61,7 @@ public class CommandManager {
             }
             case WAITING_FOR_INPUT_NAME -> {
                 try {
-                    answer = nameEditor.editName(chatId, messageText);
+                    answer = nameEditor.editName(chatId, messageText, username);
                 } catch (Exception e) {
                     return "Вы не изменили имя";
                 }
@@ -93,12 +99,26 @@ public class CommandManager {
                 } catch (Exception exception) {
                     return "Введите номер поездки(ЦИФРОЙ!).";
                 }
-                signUpCommand.changeState(chatId);
                 return signUpCommand.registerUser(number, chatId);
             }
             case WAITING_FOR_INPUT_EDIT_CONFIRMATION -> answer = editCommand.handleConfirmInput(messageText, chatId);
+            case WAITING_FOR_INPUT_SHOW_OR_DEL -> {
+                if (messageText.startsWith("0")) {
+                    stateService.updateState(chatId, States.WAITING_FOR_COMMAND);
+                    return "Вы вышли";
+                } else if (messageText.startsWith("/show")) {
+                    int number;
+                    try {
+                        number = Integer.parseInt(messageText.split(" ")[1]);
+                    } catch (Exception exception) {
+                        return "Введите номер поездки(ЦИФРОЙ!).";
+                    }
+                    showCommand.changeState(chatId);
+                    return showCommand.getBotText(chatId, number);
+                }
+            }
 
-            case WAITING_FOR_COMMAND -> answer = readCommand(messageText, chatId);
+            case WAITING_FOR_COMMAND -> answer = readCommand(messageText, chatId, username);
 
         }
 
@@ -106,7 +126,7 @@ public class CommandManager {
     }
 
 
-    public String readCommand(String command, long chatID) {
+    public String readCommand(String command, long chatID, String username) {
         command = command.split(" ")[0];
         switch (command) {
             case "/start" -> {
@@ -128,13 +148,17 @@ public class CommandManager {
                 addCommand.updateState(chatID);
                 return addCommand.getBotText();
             }
+            case "/profile" -> {
+                return profileCommand.viewTrips(chatID);
+            }
             case "/view" -> {
-                return viewCommand.viewTrips(chatID);
+                viewCommand.changeState(chatID);
+                return viewCommand.getBotText(chatID);
             }
             default -> {
                 if (String.valueOf(command.charAt(0)).equals("/")) return "Не удалось разпознать команду";
                 else {
-                    return "Ваше сообщение: " + command;
+                    return "Ваше сообщение: " + username;
                 }
             }
         }

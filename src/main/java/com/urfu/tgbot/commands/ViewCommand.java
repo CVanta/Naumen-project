@@ -1,34 +1,42 @@
 package com.urfu.tgbot.commands;
 
 import com.urfu.tgbot.models.Trip;
-import com.urfu.tgbot.models.User;
-import com.urfu.tgbot.services.UserService;
+import com.urfu.tgbot.services.StateService;
+import com.urfu.tgbot.services.TripService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import com.urfu.tgbot.enums.States;
+
+import java.util.List;
 
 @Component
 public class ViewCommand {
 
-    private final UserService userService;
+    private StateService stateService;
+    private TripService tripService;
 
     @Autowired
-    public ViewCommand(UserService userService) {
-        this.userService = userService;
+    public void ViewCommand(StateService stateService, TripService tripService) {
+        this.stateService = stateService;
+        this.tripService = tripService;
     }
 
-    public String viewTrips(long chatID){
-        User user = userService.getUserByChatID(chatID);
-        int cnt = 1;
-        StringBuilder result = new StringBuilder();
-        result.append("Поездки, на которые вы записались \n");
-        for (Trip trip : user.getTripList()) {
-            result
-                    .append(cnt)
-                    .append(". ")
-                    .append(trip.getFormattedString())
-                    .append("\n");
-            cnt +=1;
+    public void changeState(long chatID){
+        stateService.updateState(chatID, States.WAITING_FOR_INPUT_SHOW_OR_DEL);
+    }
+
+    public String getBotText(long chatID){
+        List<Trip> trips = tripService.getAllTripsByChatId(chatID);
+        String result = "";
+        int num = 1;
+        for (Trip trip : trips) {
+            String tString = trip.getTimeTrip() + " " +
+                    trip.getDestination() + " мест:" +
+                    trip.getFreePlaces();
+            result += num + ". " + tString + "\n";
+            num += 1;
         }
-        return result.toString();
+        result += "0 - для выхода в режим комманд";
+        return result;
     }
 }

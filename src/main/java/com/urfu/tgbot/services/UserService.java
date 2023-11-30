@@ -47,11 +47,12 @@ public class UserService {
     }
 
     public void addTripToUser(Trip trip, User user){
-
         User currentUser = userRepository.findById(user.getChatID()).get();
         trip.deletePassenger(currentUser);
+        userRepository.delete(currentUser);
+        trip.addPassenger(currentUser);
         currentUser.addTrip(trip);
         userRepository.save(currentUser);
-        trip.addPassenger(user);
+
     }
 }
