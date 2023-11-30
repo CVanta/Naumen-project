@@ -26,6 +26,6 @@ public class AddCommand {
     }
 
     public String getBotText() {
-        return "Введите время поездки";
+        return "Введите место назначения";
     }
 }

@@ -1,10 +1,9 @@
 package com.urfu.tgbot.models;
 
-import com.urfu.tgbot.enums.Role;
 import jakarta.persistence.*;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "users")
@@ -19,6 +18,8 @@ public class User {
     private String institute;
 
     private long phoneNumber;
+    @ManyToMany(fetch = FetchType.EAGER)
+    private List<Trip> tripList;
 
     public User() {
     }
@@ -46,19 +47,9 @@ public class User {
         private String institute;
         private long phoneNumber;
 
+
         public Builder(long chatID) {
             this.chatID = chatID;
-        }
-
-
-        public Builder chatID(long chatID) {
-            this.chatID = chatID;
-            return this;
-        }
-
-
-        public long getPhoneNumber() {
-            return phoneNumber;
         }
 
         public Builder username(String username) {
@@ -86,9 +77,19 @@ public class User {
         }
     }
 
-    @Override
-    public String toString() {
+    public String getFormattedString() {
         return " ФИО: " + username + "\n Номер телефона: " + phoneNumber + "\n Институт: " + institute;
+    }
+
+    public List<Trip> getTripList() {
+        return tripList;
+    }
+
+    public void removeTrip(Trip trip) {
+        if(tripList != null) {
+            tripList.remove(trip);
+            trip.getPassengers().remove(this);
+        }
     }
 
     public String getUsername() {
@@ -106,4 +107,12 @@ public class User {
     public long getChatID() {
         return this.chatID;
     }
+
+    public void addTrip(Trip trip){
+        if (this.tripList == null)
+            tripList = new ArrayList<>();
+
+        this.tripList.add(trip);
+    }
+
 }

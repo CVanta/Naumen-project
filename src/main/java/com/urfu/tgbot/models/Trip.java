@@ -1,9 +1,9 @@
 package com.urfu.tgbot.models;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "trips")
@@ -18,6 +18,9 @@ public class Trip {
     private String timeTrip;
     private int freePlaces;
 
+    @ManyToMany(fetch = FetchType.EAGER)
+    private List<User> passengers = new ArrayList<>();
+
     public Trip(long driverID, String listPassenger, String destination, String timeTrip, int freePlaces) {
         this.driverID = driverID;
         this.listPassenger = listPassenger;
@@ -27,14 +30,17 @@ public class Trip {
     }
 
 
-
-    public Trip(long driverID, String destination){
+    public Trip(long driverID, String destination) {
         this.driverID = driverID;
         this.destination = destination;
     }
 
     public Trip() {
 
+    }
+
+    public List<User> getPassengers() {
+        return passengers;
     }
 
     public static class TripBuilder {
@@ -84,7 +90,6 @@ public class Trip {
     }
 
 
-
     public long getDriverID() {
         return driverID;
     }
@@ -123,5 +128,21 @@ public class Trip {
 
     public int getFreePlaces() {
         return freePlaces;
+    }
+
+    public void addPassenger(User user) {
+        this.passengers.add(user);
+    }
+
+    public void decrementFreePlaces() {
+        this.freePlaces -= 1;
+    }
+
+    public String getFormattedString(){
+        return destination + timeTrip;
+    }
+
+    public void deletePassenger(User user){
+        passengers.remove(user);
     }
 }

@@ -26,9 +26,12 @@ public class CommandManager {
 
     private final AddingTrip addingTrip;
 
+    private final SignUpCommand signUpCommand;
+
+    private final ViewCommand viewCommand;
 
     @Autowired
-    public CommandManager(StartCommand startCommand, HelpCommand helpCommand, ListCommand listCommand, StateService stateService, NameEditor nameEditor, EditCommand editCommand, AddCommand addCommand, AddingTrip addingTrip) {
+    public CommandManager(StartCommand startCommand, HelpCommand helpCommand, ListCommand listCommand, StateService stateService, NameEditor nameEditor, EditCommand editCommand, AddCommand addCommand, AddingTrip addingTrip, SignUpCommand signUpCommand, ViewCommand viewCommand) {
         this.startCommand = startCommand;
         this.helpCommand = helpCommand;
         this.listCommand = listCommand;
@@ -37,6 +40,8 @@ public class CommandManager {
         this.editCommand = editCommand;
         this.addCommand = addCommand;
         this.addingTrip = addingTrip;
+        this.signUpCommand = signUpCommand;
+        this.viewCommand = viewCommand;
     }
 
 
@@ -81,6 +86,16 @@ public class CommandManager {
                 return addingTrip.addDriverDestinationTrip(chatId, messageText);
 
             }
+            case WAITING_FOR_INPUT_TRIP_NUMBER -> {
+                int number;
+                try {
+                    number = Integer.parseInt(messageText);
+                } catch (Exception exception) {
+                    return "Введите номер поездки(ЦИФРОЙ!).";
+                }
+                signUpCommand.changeState(chatId);
+                return signUpCommand.registerUser(number, chatId);
+            }
             case WAITING_FOR_INPUT_EDIT_CONFIRMATION -> answer = editCommand.handleConfirmInput(messageText, chatId);
 
             case WAITING_FOR_COMMAND -> answer = readCommand(messageText, chatId);
@@ -92,6 +107,7 @@ public class CommandManager {
 
 
     public String readCommand(String command, long chatID) {
+        command = command.split(" ")[0];
         switch (command) {
             case "/start" -> {
                 startCommand.changeState(chatID);
@@ -101,6 +117,7 @@ public class CommandManager {
                 return helpCommand.getBotCommand();
             }
             case "/list" -> {
+                listCommand.changeState(chatID);
                 return listCommand.getAllAvailableTrips();
             }
             case "/edit" -> {
@@ -110,6 +127,9 @@ public class CommandManager {
             case "/add" -> {
                 addCommand.updateState(chatID);
                 return addCommand.getBotText();
+            }
+            case "/view" -> {
+                return viewCommand.viewTrips(chatID);
             }
             default -> {
                 if (String.valueOf(command.charAt(0)).equals("/")) return "Не удалось разпознать команду";

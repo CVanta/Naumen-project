@@ -1,6 +1,7 @@
 package com.urfu.tgbot.services;
 
 import com.urfu.tgbot.enums.Role;
+import com.urfu.tgbot.models.Trip;
 import com.urfu.tgbot.models.User;
 import com.urfu.tgbot.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,5 +44,14 @@ public class UserService {
 
     public User getUserByChatID(long chatID) {
         return userRepository.findById(chatID).get();
+    }
+
+    public void addTripToUser(Trip trip, User user){
+
+        User currentUser = userRepository.findById(user.getChatID()).get();
+        trip.deletePassenger(currentUser);
+        currentUser.addTrip(trip);
+        userRepository.save(currentUser);
+        trip.addPassenger(user);
     }
 }

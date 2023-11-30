@@ -20,7 +20,13 @@ public class AddingTrip {
 
     public String addDriverDestinationTrip(long chatID, String destination) {
         InputHandler inputHandler = new InputHandler();
-        inputHandler.checkInstitute(destination);
+        try {
+            inputHandler.checkInstitute(destination);
+        }
+        catch (IllegalArgumentException exception)
+        {
+            return exception.getMessage();
+        }
         Trip trip = new Trip(chatID, destination);
         try {
             tripService.addTrip(trip);

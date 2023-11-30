@@ -25,7 +25,7 @@ public class EditCommand {
     }
 
     public String getBotText(long chatID) {
-        String userString = userService.getUserByChatID(chatID).toString();
+        String userString = userService.getUserByChatID(chatID).getFormattedString();
         return """
                 В данный момент ваш профиль выглядит так:
                 """ + userString + """

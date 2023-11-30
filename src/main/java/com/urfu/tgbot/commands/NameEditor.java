@@ -52,7 +52,7 @@ public class NameEditor {
         userService.deleteUser(newUser);
         userService.addUser(newUser);
         stateService.updateState(chatID, States.WAITING_FOR_COMMAND);
-        return "Вы успешно зарегистрировались. Ваш профиль:" + newUser.toString();
+        return "Вы успешно зарегистрировались. Ваш профиль:" + newUser.getFormattedString();
     }
 
     public String editPhoneNumber(long chatID, String phoneNumber) throws Exception {

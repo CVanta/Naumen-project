@@ -1,6 +1,7 @@
 package com.urfu.tgbot.services;
 
 import com.urfu.tgbot.models.Trip;
+import com.urfu.tgbot.models.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
@@ -24,10 +25,16 @@ public class TripService {
         TripService.tripRepository = tripRepository;
     }
 
-    public static List<Trip> getAllTrips() {
+    public List<Trip> getAllTrips() {
         List<Trip> trips = new ArrayList<>();
         tripRepository.findAll().forEach(trips::add);
         return trips;
+    }
+
+    public List<Trip> getTripsWithPassengersMoreThanZero() {
+        Iterable<Trip> iterable = () -> tripRepository.findAll().iterator();
+        Stream<Trip> stream = StreamSupport.stream(iterable.spliterator(), false);
+        return stream.filter(x -> x.getFreePlaces() > 0).toList();
     }
 
 
@@ -37,23 +44,33 @@ public class TripService {
         return trip;
     }
 
-    public void addTrip(Trip trip){
-        if (tripRepository.findById(trip.getId()).isPresent()){
-            throw new IllegalArgumentException("trip exist");
-        }
+    public void addTrip(Trip trip) {
         tripRepository.save(trip);
     }
 
-    public void deleteTrip(Trip trip){
-        if (tripRepository.findById(trip.getId()).isEmpty()){
+    public void deleteTrip(Trip trip) {
+        if (tripRepository.findById(trip.getId()).isEmpty()) {
             throw new IllegalArgumentException("trip not exist");
         }
         tripRepository.delete(trip);
     }
 
-    public Trip getLastTripChatID(long chatID){
+    public Trip getLastTripChatID(long chatID) {
         Iterable<Trip> iterable = () -> tripRepository.findAll().iterator();
         Stream<Trip> stream = StreamSupport.stream(iterable.spliterator(), false);
         return stream.filter(x -> x.getDriverID() == chatID).max(Comparator.comparing(x -> x.getId())).get();
     }
+
+    public void addUserToTrip(Trip trip, User user) {
+        tripRepository.delete(trip);
+        trip.addPassenger(user);
+        tripRepository.save(trip);
+    }
+
+    public void decrementFreePlaces(Trip trip) {
+        tripRepository.delete(trip);
+        trip.decrementFreePlaces();
+        tripRepository.save(trip);
+    }
+
 }

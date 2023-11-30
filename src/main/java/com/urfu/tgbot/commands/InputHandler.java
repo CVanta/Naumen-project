@@ -1,6 +1,9 @@
 package com.urfu.tgbot.commands;
 
 import javax.xml.crypto.Data;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
@@ -84,9 +87,16 @@ public class InputHandler {
      * @throws IllegalArgumentException Если строка не соответствует формату "DD-MM-YY HH:MM".
      */
     public void checkDateFormat(String dateString) throws IllegalArgumentException {
-        String regex = "^(0[1-9]|[12][0-9]|3[01])-(0[1-9]|1[0-2])-(\\d{2})\\s([01][0-9]|2[0-3]):([0-5][0-9])$";
-        if (!dateString.matches(regex)) {
+        DateFormat dateFormat = new SimpleDateFormat("dd-MM-yy HH:mm");
+        Date currentDate = new Date();
+        Date date;
+        try {
+            date = dateFormat.parse(dateString);
+        } catch (ParseException e) {
             throw new IllegalArgumentException("Неверный формат даты и времени");
+        }
+        if (currentDate.after(date)) {
+            throw new IllegalArgumentException("Путешествия во времени запрещены");
         }
     }
 
