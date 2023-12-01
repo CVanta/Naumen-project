@@ -44,6 +44,10 @@ public class Trip {
         return passengers;
     }
 
+    /**
+     * Билдер для поездки. Собирает поездку по частям,
+     * по мере того как пользователь вводит данные.
+     */
     public static class TripBuilder {
         private Long id;
         private long driverID;
@@ -53,31 +57,56 @@ public class Trip {
         private int freePlaces;
 
 
+        /**
+         * Устанавливаем driverID для водителя поездки.
+         * @param driverID - идентификатор водителя поездки
+         * @return TripBuilder
+         */
         public TripBuilder driverID(long driverID) {
             this.driverID = driverID;
             return this;
         }
-
+        /**
+         * Устанавливаем список пассажиров в поездке.
+         * @param listPassenger - список пассажиров.
+         * @return TripBuilder
+         */
         public TripBuilder listPassenger(String listPassenger) {
             this.listPassenger = listPassenger;
             return this;
         }
-
+        /**
+         * Устанавливаем место назначения в поездке.
+         * @param destination - место назначения.
+         * @return TripBuilder
+         */
         public TripBuilder destination(String destination) {
             this.destination = destination;
             return this;
         }
-
+        /**
+         * Устанавливаем время начала поездки.
+         * @param timeTrip - время поездки.
+         * @return TripBuilder
+         */
         public TripBuilder timeTrip(String timeTrip) {
             this.timeTrip = timeTrip;
             return this;
         }
-
+        /**
+         * Устанавливаем кол-во свободных мест в автомобиле.
+         * @param freePlaces - кол-во свободных мест в автомобиле.
+         * @return TripBuilder
+         */
         public TripBuilder freePlaces(int freePlaces) {
             this.freePlaces = freePlaces;
             return this;
         }
 
+        /**
+         * Билдер для поездки
+         * @return Trip - возвращает собрануню поездку.
+         */
         public Trip build() {
             Trip trip = new Trip();
             trip.id = this.id;
@@ -90,51 +119,108 @@ public class Trip {
         }
     }
 
-
+    /**
+     * Возвращает идентификатор водителя.
+     *
+     * @return Идентификатор водителя.
+     */
     public long getDriverID() {
         return driverID;
     }
 
+    /**
+     * Устанавливает идентификатор водителя.
+     *
+     * @param driver Новый идентификатор водителя.
+     */
     private void setDriverID(long driver) {
         this.driverID = driver;
     }
 
+    /**
+     * Возвращает список пассажиров.
+     *
+     * @return Список пассажиров.
+     */
     public String getListPassenger() {
         return listPassenger;
     }
 
+    /**
+     * Устанавливает список пассажиров.
+     *
+     * @param listPassenger Новый список пассажиров.
+     */
     private void setListPassenger(String listPassenger) {
         this.listPassenger = listPassenger;
     }
 
+    /**
+     * Возвращает пункт назначения поездки.
+     *
+     * @return Пункт назначения поездки.
+     */
     public String getDestination() {
         return destination;
     }
 
+    /**
+     * Устанавливает пункт назначения поездки.
+     *
+     * @param destination Новый пункт назначения поездки.
+     */
     private void setDestination(String destination) {
         this.destination = destination;
     }
 
+    /**
+     * Возвращает время поездки.
+     *
+     * @return Время поездки.
+     */
     public String getTimeTrip() {
         return timeTrip;
     }
 
+    /**
+     * Устанавливает время поездки.
+     *
+     * @param timeTrip Новое время поездки.
+     */
     private void setTimeTrip(String timeTrip) {
         this.timeTrip = timeTrip;
     }
 
+    /**
+     * Возвращает идентификатор поездки.
+     *
+     * @return Идентификатор поездки.
+     */
     public Long getId() {
         return id;
     }
 
+    /**
+     * Возвращает кол-во свободных мест в автомобиле.
+     *
+     */
     public int getFreePlaces() {
         return freePlaces;
     }
 
+    /**
+     * Добавляет пассажира к поездке.
+     *
+     * @param user пассажир, которого нужно добавить.
+     */
     public void addPassenger(User user) {
         this.passengers.add(user);
     }
 
+    /**
+     * Уменьшает кол-во свободных мест в автомобиле на единицу.
+     *
+     */
     public void decrementFreePlaces() {
         this.freePlaces -= 1;
     }
@@ -143,6 +229,11 @@ public class Trip {
         return destination + timeTrip;
     }
 
+    /**
+     * Удаляет пассажира из поездки.
+     *
+     * @param user пассажир, которого нужно удалить.
+     */
     public void deletePassenger(User user){
         passengers.remove(user);
     }

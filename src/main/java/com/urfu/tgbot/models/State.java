@@ -8,6 +8,7 @@ import jakarta.persistence.Table;
 @Entity
 @Table(name = "states")
 public class State {
+
     @Id
     private Long chatId;
 
@@ -30,10 +31,20 @@ public class State {
         this.chatId = chatId;
     }
 
+    /**
+     * Возвращает текущее состояние чата.
+     *
+     * @return Текущее состояние чата.
+     */
     public States getState() {
         return state;
     }
 
+    /**
+     * Устанавливает текущее состояние чата.
+     *
+     * @param state Новое текущее состояние чата.
+     */
     private void setState(States state) {
         this.state = state;
     }

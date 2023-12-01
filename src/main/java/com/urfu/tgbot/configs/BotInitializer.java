@@ -14,6 +14,11 @@ public class BotInitializer {
     @Autowired
     private TelegramBot bot;
 
+    /**
+     * Инициализирует Telegram-бота.
+     *
+     * @throws TelegramApiException Если возникла ошибка при регистрации бота в Telegram.
+     */
     @EventListener({ContextRefreshedEvent.class})
     public void init() throws TelegramApiException {
         TelegramBotsApi api = new TelegramBotsApi(DefaultBotSession.class);

@@ -20,10 +20,20 @@ public class EditCommand {
 
     }
 
+    /**
+     * Обновляет состояние чата на `WAITING_FOR_INPUT_EDIT_CONFIRMATION`.
+     *
+     * @param chatID Идентификатор чата пользователя.
+     */
     public void updateState(long chatID) {
         stateService.updateState(chatID, States.WAITING_FOR_INPUT_EDIT_CONFIRMATION);
     }
 
+    /**
+     * Генерирует сообщение подтверждения от бота для редактирования профиля.
+     * @param chatID Идентификатор чата пользователя.
+     * @return Сообщение подтверждения от бота для редактирования профиля.
+     */
     public String getBotText(long chatID) {
         String userString = userService.getUserByChatID(chatID).getFormattedString();
         return """
@@ -34,6 +44,12 @@ public class EditCommand {
                 (введите "Да" или "Нет")""";
     }
 
+    /**
+     * Обрабатывает ввод подтверждения пользователя для редактирования профиля.
+     * @param input Ввод пользователя.
+     * @param chatID Идентификатор чата пользователя.
+     * @return Ответ бота на основе ввода пользователя.
+     */
     public String handleConfirmInput(String input, long chatID) {
         InputHandler inputHandler = new InputHandler();
         try {

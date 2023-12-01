@@ -16,6 +16,12 @@ public class ProfileCommand {
         this.userService = userService;
     }
 
+    /**
+     * Получает список всех поездок, на которые пользователь записался.
+     *
+     * @param chatID Идентификатор чата.
+     * @return Список поездок.
+     */
     public String viewTrips(long chatID){
         User user = userService.getUserByChatID(chatID);
         int cnt = 1;

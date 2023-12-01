@@ -25,10 +25,22 @@ public class SignUpCommand {
         this.userService = userService;
     }
 
+    /**
+     * Обновляет состояние чата на WAITING_FOR_COMMAND.
+     *
+     * @param chatID Идентификатор чата.
+     */
     public void changeState(long chatID) {
         stateService.updateState(chatID, States.WAITING_FOR_COMMAND);
     }
 
+    /**
+     * Регистрирует пользователя на указанную поездку.
+     *
+     * @param numberTrip Номер поездки.
+     * @param chatID Идентификатор чата.
+     * @return Текст бота.
+     */
     public String registerUser(int numberTrip, long chatID) {
         if (numberTrip == 0) {
             stateService.updateState(chatID, States.WAITING_FOR_COMMAND);

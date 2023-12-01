@@ -14,9 +14,6 @@ public class User {
 
     private String tgUsername;
 
-    public String getTgUsername() {
-        return tgUsername;
-    }
     private boolean isActive;
 
     @Id
@@ -41,14 +38,10 @@ public class User {
         this.tgUsername = tgUsername;
     }
 
-    public String getInstitute() {
-        return institute;
-    }
-
-    public long getPhoneNumber() {
-        return phoneNumber;
-    }
-
+    /**
+     * Билдер для пользователя. Собирает пользователя по частям,
+     * по мере того как он вводит данные.
+     */
     public static class Builder {
         private String username;
         private long chatID;
@@ -61,21 +54,41 @@ public class User {
             this.chatID = chatID;
         }
 
+        /**
+         * Устанавливает имя пользователя.
+         * @param username имя пользователя
+         * @return Builder
+         */
         public Builder username(String username) {
             this.username = username;
             return this;
         }
 
+        /**
+         * Устанавливает TGимя пользователя.
+         * @param tgUsername TGимя пользователя
+         * @return Builder
+         */
         public Builder tgUsername(String tgUsername){
             this.tgUsername = tgUsername;
             return this;
         }
 
+        /**
+         * Устанавливает институт пользователя.
+         * @param institute институт пользователя.
+         * @return Builder
+         */
         public Builder institute(String institute) {
             this.institute = institute;
             return this;
         }
 
+        /**
+         * Устанавливает номер телефона пользователя.
+         * @param phoneNumber номер телефона пользователя.
+         * @return Builder
+         */
         public Builder phoneNumber(long phoneNumber) {
             this.phoneNumber = phoneNumber;
             return this;
@@ -92,30 +105,80 @@ public class User {
         }
     }
 
+    /**
+     * Возвращает отформатированную строковую representation информации о пользователе.
+     * @return Отформатированная строковая representation информации о пользователе.
+     */
     public String getFormattedString() {
         return " ФИО: " + username + "\n Номер телефона: " + phoneNumber + "\n Институт: " + institute;
     }
 
+    /**
+     * Возвращает список поездок пользователя.
+     * @return Список поездок на которые записан пользователь.
+     */
     public List<Trip> getTripList() {
         return tripList;
     }
 
+    /**
+     * Возвращает полное имя пользователя.
+     *
+     * @return Полное имя пользователя.
+     */
     public String getUsername() {
         return username;
     }
 
+    /**
+     * Возвращает Telegram-имя пользователя.
+     *
+     * @return Telegram-имя пользователя.
+     */
+    public String getTgUsername() {
+        return tgUsername;
+    }
+
+
+    /**
+     * Возвращает номер телефона пользователя.
+     *
+     * @return Номер телефона пользователя.
+     */
+    public long getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    /**
+     * Возвращает, активен ли пользователь.
+     *
+     * @return true, если пользователь активен, false - иначе.
+     */
+    public boolean isActive() {return isActive;}
+
+    /**
+     * Устанавливает активен ли пользователь.
+     *
+     * @param active True- пользователь активен, False - пользователь не активен
+     */
     public void setActive(boolean active) {
         this.isActive = active;
     }
 
-    public boolean isActive() {
-        return isActive;
-    }
 
+    /**
+     * Возвращает уникальный идентификатор пользователя.
+     *
+     * @return Уникальный идентификатор пользователя.
+     */
     public long getChatID() {
         return this.chatID;
     }
 
+    /**
+     * Добавление поездки к пользователю.
+     * @param trip поездка которую надо добавить.
+     */
     public void addTrip(Trip trip) {
         if (this.tripList == null)
             tripList = new ArrayList<>();
@@ -123,6 +186,10 @@ public class User {
         trip.getPassengers().add(this);
     }
 
+    /**
+     * Удаление поездки у пользователя.
+     * @param trip поездка которую надо удалить.
+     */
     public void removeTrip(Trip trip) {
         if (this.tripList == null)
             return;

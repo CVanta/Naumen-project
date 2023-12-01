@@ -17,11 +17,20 @@ public class StartCommand {
         this.stateService = stateService;
     }
 
+    /**
+     * Обновляет состояние чата на `WAITING_FOR_INPUT_NAME`.
+     *
+     * @param chatID Идентификатор чата пользователя.
+     */
     public void changeState(long chatID) {
         stateService.saveState(chatID, WAITING_FOR_INPUT_NAME);
     }
 
 
+    /**
+     * Генерирует приветственное сообщение бота.
+     * @return Приветственное сообщение бота.
+     */
     public String getBotText() {
         return """
                 Здравствуйте. Вас приветствует бот для поиска попутчиков.

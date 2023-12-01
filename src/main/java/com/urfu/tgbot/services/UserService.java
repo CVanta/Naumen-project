@@ -25,6 +25,12 @@ public class UserService {
         this.userRepository = userRepository;
     }
 
+    /**
+     * Добавляет нового пользователя в базу данных.
+     *
+     * @param user Пользователь для добавления.
+     * @throws Exception Если пользователь уже существует.
+     */
     public void addUser(User user) throws Exception {
         User userFromDb = userRepository.findByUsername(user.getUsername());
         if (userFromDb != null) {
@@ -34,6 +40,12 @@ public class UserService {
         userRepository.save(user);
     }
 
+    /**
+     * Удаляет пользователя из базы данных.
+     *
+     * @param user Пользователь для удаления.
+     * @throws Exception Если пользователь не существует.
+     */
     public void deleteUser(User user) throws Exception {
         User userFromDb = userRepository.findById(user.getChatID()).get();
         if (userFromDb == null) {
@@ -42,10 +54,22 @@ public class UserService {
         userRepository.delete(user);
     }
 
+    /**
+     * Получает пользователя по идентификатору чата.
+     *
+     * @param chatID Идентификатор чата.
+     * @return Пользователь с указанным идентификатором чата.
+     */
     public User getUserByChatID(long chatID) {
         return userRepository.findById(chatID).get();
     }
 
+    /**
+     * Добавляет поездку к пользователю.
+     *
+     * @param trip Поездка для добавления.
+     * @param user Пользователь, к которому добавить поездку.
+     */
     public void addTripToUser(Trip trip, User user){
         User currentUser = userRepository.findById(user.getChatID()).get();
         trip.deletePassenger(currentUser);

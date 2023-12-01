@@ -21,10 +21,21 @@ public class ViewCommand {
         this.tripService = tripService;
     }
 
+
+    /**
+     * Обновляет состояние чата на `WAITING_FOR_INPUT_SHOW_OR_DEL`.
+     *
+     * @param chatID Идентификатор чата пользователя.
+     */
     public void changeState(long chatID){
         stateService.updateState(chatID, States.WAITING_FOR_INPUT_SHOW_OR_DEL);
     }
 
+    /**
+     * Возвращает текст, который будет отправлен ботом пользователю.
+     * @param chatID Идентификатор чата пользователя.
+     * @return Текст, который будет отправлен ботом пользователю.
+     */
     public String getBotText(long chatID){
         List<Trip> trips = tripService.getAllTripsByChatId(chatID);
         String result = "";

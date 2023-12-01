@@ -19,10 +19,22 @@ public class ShowCommand {
         this.tripService = tripService;
     }
 
+    /**
+     * Обновляет состояние чата на WAITING_FOR_COMMAND.
+     *
+     * @param chatID Идентификатор чата.
+     */
     public void changeState(long chatID){
         stateService.updateState(chatID, States.WAITING_FOR_COMMAND);
     }
 
+    /**
+     * Возвращает список пассажиров для указанной поездки.
+     *
+     * @param chatID Идентификатор чата.
+     * @param number Номер поездки, которую нужно показать.
+     * @return Текст бота.
+     */
     public String getBotText(long chatID, int number){
         List<Trip> tripList = tripService.getAllTripsByChatId(chatID);
         Trip trip = tripList.get(number-1);

@@ -22,25 +22,45 @@ public class StateService {
         this.statesRepository = statesRepository;
     }
 
-
+    /**
+     * Получает все состояния из базы данных.
+     *
+     * @return Список всех состояний.
+     */
     public List<State> getAllStates() {
         List<State> allStates = new ArrayList<>();
         statesRepository.findAll().forEach(allStates::add);
         return states;
     }
 
-
+    /**
+     * Сохраняет новое состояние в базу данных.
+     *
+     * @param chatID Идентификатор чата.
+     * @param state Состояние для сохранения.
+     */
     public void saveState(Long chatID, States state) {
         State newState = new State(chatID, state);
         statesRepository.save(newState);
     }
 
+    /**
+     * Обновляет существующее состояние в базе данных.
+     *
+     * @param chatID Идентификатор чата.
+     * @param state Новое состояние.
+     */
     public void updateState(Long chatID, States state) {
         State newState = new State(chatID, state);
         statesRepository.deleteById(chatID);
         statesRepository.save(newState);
     }
 
+    /**
+     * Возвраащает текущее состояние бота.
+     * @param chatID Идентификатор чата.
+     * @return Текущее состояние бота.
+     */
     public States getState(Long chatID) {
         if (statesRepository.findById(chatID).isPresent())
             return statesRepository.findById(chatID).get().getState();

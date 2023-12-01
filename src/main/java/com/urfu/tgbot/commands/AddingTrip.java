@@ -18,6 +18,15 @@ public class AddingTrip {
         this.stateService = stateService;
     }
 
+    /**
+     * Добавляет новую поездку в базу данных, включая идентификатор водителя и пункт назначения.
+     *
+     * @param chatID Идентификатор чата.
+     * @param destination Пункт назначения поездки.
+     * @return Текст бота.
+     * @throws IllegalArgumentException Если пункт назначения не является допустимым институтом.
+     * @throws Exception Если возникла ошибка при добавлении поездки в базу данных.
+     */
     public String addDriverDestinationTrip(long chatID, String destination) {
         InputHandler inputHandler = new InputHandler();
         try {
@@ -38,6 +47,14 @@ public class AddingTrip {
         return "Напишите время и дату в формате DD-MM-YY HH:MM.";
     }
 
+    /**
+     * Добавляет время и дату поездки в базу данных.
+     *
+     * @param chatID Идентификатор чата.
+     * @param time Время и дата поездки.
+     * @return Текст бота.
+     * @throws IllegalArgumentException Если формат времени и даты некорректен.
+     */
     public String addTimeTrip(long chatID, String time) {
         InputHandler inputHandler = new InputHandler();
         try {
@@ -57,6 +74,14 @@ public class AddingTrip {
         return "Введите количество свободных мест.";
     }
 
+    /**
+     * Добавляет количество свободных мест в автомобиле в базу данных.
+     *
+     * @param chatID Идентификатор чата.
+     * @param places Количество свободных мест.
+     * @return Текст бота.
+     * @throws IllegalArgumentException Если количество свободных мест не является допустимым целым числом.
+     */
     public String addPlacesTrip(long chatID, String places){
         InputHandler inputHandler = new InputHandler();
         try {

@@ -14,6 +14,11 @@ public class BotConfig {
     @Value("${bot.token}")
     private String botToken;
 
+    /**
+     * Возвращает имя бота.
+     *
+     * @return Имя бота.
+     */
     public String getBotName() {
         return botName;
     }
@@ -22,6 +27,11 @@ public class BotConfig {
         this.botName = botName;
     }
 
+    /**
+     * Возвращает токенбота.
+     *
+     * @return Токен бота.
+     */
     public String getBotToken() {
         return botToken;
     }

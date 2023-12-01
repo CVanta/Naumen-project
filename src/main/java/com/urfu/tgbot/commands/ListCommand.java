@@ -22,6 +22,11 @@ public class ListCommand {
         this.stateService = stateService;
     }
 
+    /**
+     * Получает все доступные поездки из базы данных.
+     *
+     * @return Список доступных поездок.
+     */
     public String getAllAvailableTrips() {
         List<Trip> trips = tripService.getTripsWithPassengersMoreThanZero();
 
@@ -38,6 +43,11 @@ public class ListCommand {
         return result;
     }
 
+    /**
+     * Обновляет состояние чата на WAITING_FOR_INPUT_TRIP_NUMBER.
+     *
+     * @param chatID Идентификатор чата.
+     */
     public void changeState(long chatID) {
         stateService.updateState(chatID, States.WAITING_FOR_INPUT_TRIP_NUMBER);
     }

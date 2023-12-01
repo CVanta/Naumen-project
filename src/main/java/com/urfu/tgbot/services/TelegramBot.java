@@ -18,16 +18,31 @@ public class TelegramBot extends TelegramLongPollingBot {
         this.commandManager = commandManager;
     }
 
+    /**
+     * Возвращает имя пользователя бота.
+     *
+     * @return Имя пользователя бота.
+     */
     @Override
     public String getBotUsername() {
         return config.getBotName();
     }
 
+    /**
+     * Возвращает токен бота.
+     *
+     * @return Токен бота.
+     */
     @Override
     public String getBotToken() {
         return config.getBotToken();
     }
 
+    /**
+     * Обрабатывает входящие обновления от API Telegram.
+     *
+     * @param update Объект обновления.
+     */
     @Override
     public void onUpdateReceived(Update update) {
         if (update.hasMessage() && update.getMessage().hasText())
@@ -39,6 +54,13 @@ public class TelegramBot extends TelegramLongPollingBot {
             sendMessage(chatID, answer);
         }
     }
+
+    /**
+     * Отправляет сообщение в указанный идентификатор чата.
+     *
+     * @param chatId идентификатор чата.
+     * @param textToSend Сообщение, которое нужно отправить.
+     */
     private void sendMessage(long chatId, String textToSend){
         SendMessage message = new SendMessage();
         message.setChatId(String.valueOf(chatId));

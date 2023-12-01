@@ -14,6 +14,11 @@ public class AddCommand {
         this.stateService = stateService;
     }
 
+    /**
+     * Обновляет состояние чата на WAITING_FOR_INPUT_DESTINATION.
+     *
+     * @param chatID Идентификатор чата.
+     */
     public void updateState(long chatID) {
         try {
             stateService.updateState(chatID, States.WAITING_FOR_INPUT_DESTINATION);
@@ -25,6 +30,11 @@ public class AddCommand {
 
     }
 
+    /**
+     * Возвращает текстовое сообщение бота для команды.
+     *
+     * @return Текстовое сообщение бота.
+     */
     public String getBotText() {
         return "Введите место назначения";
     }

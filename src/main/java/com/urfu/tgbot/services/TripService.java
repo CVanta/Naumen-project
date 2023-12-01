@@ -25,29 +25,54 @@ public class TripService {
         TripService.tripRepository = tripRepository;
     }
 
+    /**
+     * Получает список всех поездок из базы данных.
+     *
+     * @return Список всех поездок.
+     */
     public List<Trip> getAllTrips() {
         List<Trip> trips = new ArrayList<>();
         tripRepository.findAll().forEach(trips::add);
         return trips;
     }
 
+    /**
+     * Получает список поездок с более чем 0 пассажирами.
+     *
+     * @return Список поездок.
+     */
     public List<Trip> getTripsWithPassengersMoreThanZero() {
         Iterable<Trip> iterable = () -> tripRepository.findAll().iterator();
         Stream<Trip> stream = StreamSupport.stream(iterable.spliterator(), false);
         return stream.filter(x -> x.getFreePlaces() > 0).toList();
     }
 
-
+    /**
+     * Добавляет поездку в базу данных.
+     *
+     * @param driverID, listPassenger, destination Поездка для добавления.
+     */
     public Trip saveTrip(long driverID, String listPassenger, String destination, String timeTrip, int freePlaces) {
         Trip trip = new Trip(driverID, listPassenger, destination, timeTrip, freePlaces);
         tripRepository.save(trip);
         return trip;
     }
 
+    /**
+     * Добавляет поездку в базу данных.
+     *
+     * @param trip Поездка для добавления.
+     */
     public void addTrip(Trip trip) {
         tripRepository.save(trip);
     }
 
+    /**
+     * Удаляет поездку из базы данных.
+     *
+     * @param trip Поездка для удаления.
+     * @throws IllegalArgumentException Если поездка не существует.
+     */
     public void deleteTrip(Trip trip) {
         if (tripRepository.findById(trip.getId()).isEmpty()) {
             throw new IllegalArgumentException("trip not exist");
@@ -56,18 +81,36 @@ public class TripService {
     }
 
 
+    /**
+     * Получает все поездки для конкретного идентификатора чата.
+     *
+     * @param chatID Идентификатор чата.
+     * @return Список поездок по заданному chatID.
+     */
     public List<Trip> getAllTripsByChatId(long chatID){
         Iterable<Trip> iterable = () -> tripRepository.findAll().iterator();
         Stream<Trip> stream = StreamSupport.stream(iterable.spliterator(), false);
         return stream.filter(x -> x.getDriverID() == chatID).max(Comparator.comparing(Trip::getId)).stream().toList();
     }
 
+    /**
+     * Получает последнюю поездку для конкретного идентификатора чата.
+     *
+     * @param chatID Идентификатор чата.
+     * @return Поездка по заданному chatID.
+     */
     public Trip getLastTripChatID(long chatID) {
         Iterable<Trip> iterable = () -> tripRepository.findAll().iterator();
         Stream<Trip> stream = StreamSupport.stream(iterable.spliterator(), false);
         return stream.filter(x -> x.getDriverID() == chatID).max(Comparator.comparing(x -> x.getId())).get();
     }
 
+    /**
+     * Добавляет пользователя в поездку.
+     *
+     * @param trip Поездка.
+     * @param user Пользователь.
+     */
     public void addUserToTrip(Trip trip, User user) {
         trip.addPassenger(user);
         trip.decrementFreePlaces();
