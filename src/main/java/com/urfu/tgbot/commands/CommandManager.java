@@ -54,72 +54,74 @@ public class CommandManager {
     public String readInput(String messageText, long chatId, String username) {
         States state = stateService.getState(chatId);
         String answer = messageText;
-        switch (state) {
-            case null -> {
-                startCommand.changeState(chatId);
-                answer = startCommand.getBotText();
-            }
-            case WAITING_FOR_INPUT_NAME -> {
-                try {
-                    answer = nameEditor.editName(chatId, messageText, username);
-                } catch (Exception e) {
-                    return "Вы не изменили имя";
+        if (state == null){
+            startCommand.changeState(chatId);
+            answer = startCommand.getBotText();
+        }
+        else{
+            switch (state) {
+                case WAITING_FOR_INPUT_NAME -> {
+                    try {
+                        answer = nameEditor.editName(chatId, messageText, username);
+                    } catch (Exception e) {
+                        return "Вы не изменили имя";
+                    }
                 }
-            }
-            case WAITING_FOR_INPUT_INSTITUTE -> {
-                try {
-                    answer = nameEditor.editInstitute(chatId, messageText);
-                } catch (Exception e) {
-                    return "Вы не изменили институт";
+                case WAITING_FOR_INPUT_INSTITUTE -> {
+                    try {
+                        answer = nameEditor.editInstitute(chatId, messageText);
+                    } catch (Exception e) {
+                        return "Вы не изменили институт";
+                    }
                 }
-            }
-            case WAITING_FOR_INPUT_PHONE_NUMBER -> {
-                try {
-                    answer = nameEditor.editPhoneNumber(chatId, messageText);
-                } catch (Exception e) {
-                    return "Вы не изменили номер телефона";
+                case WAITING_FOR_INPUT_PHONE_NUMBER -> {
+                    try {
+                        answer = nameEditor.editPhoneNumber(chatId, messageText);
+                    } catch (Exception e) {
+                        return "Вы не изменили номер телефона";
+                    }
                 }
-            }
-            case WAITING_FOR_INPUT_TIME -> {
-                return addingTrip.addTimeTrip(chatId, messageText);
-            }
+                case WAITING_FOR_INPUT_TIME -> {
+                    return addingTrip.addTimeTrip(chatId, messageText);
+                }
 
-            case WAITING_FOR_INPUT_PLACES -> {
-                return addingTrip.addPlacesTrip(chatId, messageText);
-            }
-
-            case WAITING_FOR_INPUT_DESTINATION -> {
-                return addingTrip.addDriverDestinationTrip(chatId, messageText);
-
-            }
-            case WAITING_FOR_INPUT_TRIP_NUMBER -> {
-                int number;
-                try {
-                    number = Integer.parseInt(messageText);
-                } catch (Exception exception) {
-                    return "Введите номер поездки(ЦИФРОЙ!).";
+                case WAITING_FOR_INPUT_PLACES -> {
+                    return addingTrip.addPlacesTrip(chatId, messageText);
                 }
-                return signUpCommand.registerUser(number, chatId);
-            }
-            case WAITING_FOR_INPUT_EDIT_CONFIRMATION -> answer = editCommand.handleConfirmInput(messageText, chatId);
-            case WAITING_FOR_INPUT_SHOW_OR_DEL -> {
-                if (messageText.startsWith("0")) {
-                    stateService.updateState(chatId, States.WAITING_FOR_COMMAND);
-                    return "Вы вышли";
-                } else if (messageText.startsWith("/show")) {
+
+                case WAITING_FOR_INPUT_DESTINATION -> {
+                    return addingTrip.addDriverDestinationTrip(chatId, messageText);
+
+                }
+                case WAITING_FOR_INPUT_TRIP_NUMBER -> {
                     int number;
                     try {
-                        number = Integer.parseInt(messageText.split(" ")[1]);
+                        number = Integer.parseInt(messageText);
                     } catch (Exception exception) {
                         return "Введите номер поездки(ЦИФРОЙ!).";
                     }
-                    showCommand.changeState(chatId);
-                    return showCommand.getBotText(chatId, number);
+                    return signUpCommand.registerUser(number, chatId);
                 }
+                case WAITING_FOR_INPUT_EDIT_CONFIRMATION -> answer = editCommand.handleConfirmInput(messageText, chatId);
+                case WAITING_FOR_INPUT_SHOW_OR_DEL -> {
+                    if (messageText.startsWith("0")) {
+                        stateService.updateState(chatId, States.WAITING_FOR_COMMAND);
+                        return "Вы вышли";
+                    } else if (messageText.startsWith("/show")) {
+                        int number;
+                        try {
+                            number = Integer.parseInt(messageText.split(" ")[1]);
+                        } catch (Exception exception) {
+                            return "Введите номер поездки(ЦИФРОЙ!).";
+                        }
+                        showCommand.changeState(chatId);
+                        return showCommand.getBotText(chatId, number);
+                    }
+                }
+
+                case WAITING_FOR_COMMAND -> answer = readCommand(messageText, chatId, username);
+
             }
-
-            case WAITING_FOR_COMMAND -> answer = readCommand(messageText, chatId, username);
-
         }
 
         return answer;
@@ -158,7 +160,7 @@ public class CommandManager {
             default -> {
                 if (String.valueOf(command.charAt(0)).equals("/")) return "Не удалось разпознать команду";
                 else {
-                    return "Ваше сообщение: " + username;
+                    return "Ваше сообщение -> " + command + " <-";
                 }
             }
         }
