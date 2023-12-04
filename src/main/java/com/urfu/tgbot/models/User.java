@@ -150,13 +150,6 @@ public class User {
     }
 
     /**
-     * Возвращает, активен ли пользователь.
-     *
-     * @return true, если пользователь активен, false - иначе.
-     */
-    public boolean isActive() {return isActive;}
-
-    /**
      * Устанавливает активен ли пользователь.
      *
      * @param active True- пользователь активен, False - пользователь не активен
@@ -191,8 +184,10 @@ public class User {
      * @param trip поездка которую надо удалить.
      */
     public void removeTrip(Trip trip) {
-        if (this.tripList == null)
+        if (this.tripList == null) {
+            this.tripList = new ArrayList<Trip>();
             return;
+        }
         this.tripList.remove(trip);
         trip.getPassengers().remove(this);
     }

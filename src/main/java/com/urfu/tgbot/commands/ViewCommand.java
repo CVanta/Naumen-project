@@ -38,6 +38,11 @@ public class ViewCommand {
      */
     public String getBotText(long chatID){
         List<Trip> trips = tripService.getAllTripsByChatId(chatID);
+        if(trips.size() == 0)
+        {
+            stateService.updateState(chatID, States.WAITING_FOR_COMMAND);
+            return "Список поездок пуст.";
+        }
         String result = "";
         int num = 1;
         for (Trip trip : trips) {

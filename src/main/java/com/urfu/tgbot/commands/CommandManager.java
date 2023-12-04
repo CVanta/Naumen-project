@@ -12,6 +12,7 @@ import org.springframework.stereotype.Controller;
 public class CommandManager {
 
     private final StartCommand startCommand;
+
     private final HelpCommand helpCommand;
 
     private final ListCommand listCommand;
@@ -34,8 +35,16 @@ public class CommandManager {
 
     private final ShowCommand showCommand;
 
+    private final DelTripCommand delTripCommand;
+
+    private final DelCommand delCommand;
+
     @Autowired
-    public CommandManager(StartCommand startCommand, HelpCommand helpCommand, ListCommand listCommand, StateService stateService, NameEditor nameEditor, EditCommand editCommand, AddCommand addCommand, AddingTrip addingTrip, SignUpCommand signUpCommand, ProfileCommand profileCommand, ViewCommand viewCommand, ShowCommand showCommand) {
+    public CommandManager(StartCommand startCommand, HelpCommand helpCommand, ListCommand listCommand,
+                          StateService stateService, NameEditor nameEditor, EditCommand editCommand,
+                          AddCommand addCommand, AddingTrip addingTrip, SignUpCommand signUpCommand,
+                          ProfileCommand profileCommand, ViewCommand viewCommand, ShowCommand showCommand,
+                          DelTripCommand delTripCommand, DelCommand delCommand) {
         this.startCommand = startCommand;
         this.helpCommand = helpCommand;
         this.listCommand = listCommand;
@@ -48,6 +57,8 @@ public class CommandManager {
         this.profileCommand = profileCommand;
         this.viewCommand = viewCommand;
         this.showCommand = showCommand;
+        this.delTripCommand = delTripCommand;
+        this.delCommand = delCommand;
     }
 
 
@@ -107,7 +118,8 @@ public class CommandManager {
                     if (messageText.startsWith("0")) {
                         stateService.updateState(chatId, States.WAITING_FOR_COMMAND);
                         return "Вы вышли";
-                    } else if (messageText.startsWith("/show")) {
+                    }
+                    if (messageText.startsWith("/show")) {
                         int number;
                         try {
                             number = Integer.parseInt(messageText.split(" ")[1]);
@@ -117,10 +129,32 @@ public class CommandManager {
                         showCommand.changeState(chatId);
                         return showCommand.getBotText(chatId, number);
                     }
+                    if(messageText.startsWith("/del")){
+                        int number;
+                        try {
+                            number = Integer.parseInt(messageText.split(" ")[1]);
+                        } catch (Exception exception) {
+                            return "Введите номер поездки(ЦИФРОЙ!).";
+                        }
+                        delTripCommand.changeState(chatId);
+                        return delTripCommand.delTrip(chatId, number);
+                    }
                 }
-
+                case WAITING_FOR_INPUT_DEL -> {
+                    if (messageText.startsWith("0")) {
+                        stateService.updateState(chatId, States.WAITING_FOR_COMMAND);
+                        return "Вы вышли";
+                    }
+                    int number;
+                    try {
+                        number = Integer.parseInt(messageText.split(" ")[1]);
+                    } catch (Exception exception) {
+                        return "Введите номер поездки(ЦИФРОЙ!).";
+                    }
+                    delCommand.changeState(chatId);
+                    return delCommand.delTrip(chatId, number);
+                }
                 case WAITING_FOR_COMMAND -> answer = readCommand(messageText, chatId, username);
-
             }
         }
 
@@ -151,6 +185,7 @@ public class CommandManager {
                 return addCommand.getBotText();
             }
             case "/profile" -> {
+                profileCommand.changeState(chatID);
                 return profileCommand.viewTrips(chatID);
             }
             case "/view" -> {

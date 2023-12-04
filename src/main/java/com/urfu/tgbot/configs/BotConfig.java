@@ -23,10 +23,6 @@ public class BotConfig {
         return botName;
     }
 
-    public void setBotName(String botName) {
-        this.botName = botName;
-    }
-
     /**
      * Возвращает токенбота.
      *
@@ -34,9 +30,5 @@ public class BotConfig {
      */
     public String getBotToken() {
         return botToken;
-    }
-
-    public void setBotToken(String botToken) {
-        this.botToken = botToken;
     }
 }

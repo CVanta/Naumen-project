@@ -39,8 +39,10 @@ public class ShowCommand {
         List<Trip> tripList = tripService.getAllTripsByChatId(chatID);
         Trip trip = tripList.get(number-1);
         StringBuilder result = new StringBuilder();
+        List<User> users = trip.getPassengers();
+        if(users.size() == 0) return "К вам никто не записался на поездку.";
         int cnt = 1;
-        for (User passenger : trip.getPassengers()) {
+        for (User passenger : users) {
             result.append(cnt)
                     .append(". ")
                     .append("@")

@@ -46,7 +46,7 @@ public class SignUpCommand {
             stateService.updateState(chatID, States.WAITING_FOR_COMMAND);
             return "Вы вышли";
         }
-        List<Trip> allTrips = tripService.getTripsWithPassengersMoreThanZero();
+        List<Trip> allTrips = tripService.getAvailableTrips();
         if (numberTrip - 1 > allTrips.size())
             return "Номера поездки нет в списке";
         Trip trip = allTrips.get(numberTrip - 1);

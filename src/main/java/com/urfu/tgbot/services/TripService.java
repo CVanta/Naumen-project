@@ -7,9 +7,14 @@ import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import com.urfu.tgbot.repositories.TripRepository;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
@@ -37,14 +42,29 @@ public class TripService {
     }
 
     /**
-     * Получает список поездок с более чем 0 пассажирами.
+     * Возвращает список поездок, до начала которых больше часа и больше 0 свободных мест.
      *
-     * @return Список поездок.
+     * @return Список поездок, до начала которых больше часа и больше 0 свободных мест.
      */
-    public List<Trip> getTripsWithPassengersMoreThanZero() {
+    public List<Trip> getAvailableTrips() {
         Iterable<Trip> iterable = () -> tripRepository.findAll().iterator();
         Stream<Trip> stream = StreamSupport.stream(iterable.spliterator(), false);
-        return stream.filter(x -> x.getFreePlaces() > 0).toList();
+        DateFormat dateFormat = new SimpleDateFormat("dd-MM-yy HH:mm");
+        Date currentDate = new Date();
+
+        Date oneHourAhead = new Date(currentDate.getTime() + TimeUnit.HOURS.toMillis(1));
+
+        return stream
+                .filter(x -> x.getFreePlaces() > 0)
+                .filter(x -> {
+                    try {
+                        Date tripDate = dateFormat.parse(x.getTimeTrip());
+                        return tripDate.after(oneHourAhead);
+                    } catch (ParseException e) {
+                        return false;
+                    }
+                })
+                .toList();
     }
 
     /**
@@ -90,7 +110,7 @@ public class TripService {
     public List<Trip> getAllTripsByChatId(long chatID){
         Iterable<Trip> iterable = () -> tripRepository.findAll().iterator();
         Stream<Trip> stream = StreamSupport.stream(iterable.spliterator(), false);
-        return stream.filter(x -> x.getDriverID() == chatID).max(Comparator.comparing(Trip::getId)).stream().toList();
+        return stream.filter(x -> x.getDriverID() == chatID).toList();
     }
 
     /**

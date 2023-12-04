@@ -129,33 +129,6 @@ public class Trip {
     }
 
     /**
-     * Устанавливает идентификатор водителя.
-     *
-     * @param driver Новый идентификатор водителя.
-     */
-    private void setDriverID(long driver) {
-        this.driverID = driver;
-    }
-
-    /**
-     * Возвращает список пассажиров.
-     *
-     * @return Список пассажиров.
-     */
-    public String getListPassenger() {
-        return listPassenger;
-    }
-
-    /**
-     * Устанавливает список пассажиров.
-     *
-     * @param listPassenger Новый список пассажиров.
-     */
-    private void setListPassenger(String listPassenger) {
-        this.listPassenger = listPassenger;
-    }
-
-    /**
      * Возвращает пункт назначения поездки.
      *
      * @return Пункт назначения поездки.
@@ -165,30 +138,12 @@ public class Trip {
     }
 
     /**
-     * Устанавливает пункт назначения поездки.
-     *
-     * @param destination Новый пункт назначения поездки.
-     */
-    private void setDestination(String destination) {
-        this.destination = destination;
-    }
-
-    /**
      * Возвращает время поездки.
      *
      * @return Время поездки.
      */
     public String getTimeTrip() {
         return timeTrip;
-    }
-
-    /**
-     * Устанавливает время поездки.
-     *
-     * @param timeTrip Новое время поездки.
-     */
-    private void setTimeTrip(String timeTrip) {
-        this.timeTrip = timeTrip;
     }
 
     /**
@@ -224,6 +179,9 @@ public class Trip {
     public void decrementFreePlaces() {
         this.freePlaces -= 1;
     }
+    public void incrementFreePlaces() {
+        this.freePlaces += 1;
+    }
 
     public String getFormattedString(){
         return destination + timeTrip;
@@ -237,6 +195,7 @@ public class Trip {
     public void deletePassenger(User user){
         passengers.remove(user);
     }
+
 
     @Override
     public boolean equals(Object o) {

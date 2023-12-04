@@ -23,14 +23,6 @@ public class State {
         this.state = state;
     }
 
-    public Long getChatId() {
-        return chatId;
-    }
-
-    private void setChatId(Long chatId) {
-        this.chatId = chatId;
-    }
-
     /**
      * Возвращает текущее состояние чата.
      *
@@ -39,14 +31,4 @@ public class State {
     public States getState() {
         return state;
     }
-
-    /**
-     * Устанавливает текущее состояние чата.
-     *
-     * @param state Новое текущее состояние чата.
-     */
-    private void setState(States state) {
-        this.state = state;
-    }
-
 }

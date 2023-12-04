@@ -28,7 +28,7 @@ public class ListCommand {
      * @return Список доступных поездок.
      */
     public String getAllAvailableTrips() {
-        List<Trip> trips = tripService.getTripsWithPassengersMoreThanZero();
+        List<Trip> trips = tripService.getAvailableTrips();
 
         String result = "";
         int num = 1;
