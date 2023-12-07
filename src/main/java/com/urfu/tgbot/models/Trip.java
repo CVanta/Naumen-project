@@ -44,6 +44,24 @@ public class Trip {
         return passengers;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Trip trip = (Trip) o;
+
+        if (driverID != trip.driverID) return false;
+        return Objects.equals(id, trip.id);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = id != null ? id.hashCode() : 0;
+        result = 31 * result + (int) (driverID ^ (driverID >>> 32));
+        return result;
+    }
+
     /**
      * Билдер для поездки. Собирает поездку по частям,
      * по мере того как пользователь вводит данные.
@@ -197,18 +215,4 @@ public class Trip {
     }
 
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        Trip trip = (Trip) o;
-
-        return Objects.equals(id, trip.id);
-    }
-
-    @Override
-    public int hashCode() {
-        return id != null ? id.hashCode() : 0;
-    }
 }

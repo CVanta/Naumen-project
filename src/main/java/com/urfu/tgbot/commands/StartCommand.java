@@ -6,7 +6,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
 import static com.urfu.tgbot.enums.States.WAITING_FOR_INPUT_NAME;
-
+/**
+ * Класс, представляющий обработку стартовой команды бота.
+ */
 @Controller
 public class StartCommand {
 
@@ -18,7 +20,7 @@ public class StartCommand {
     }
 
     /**
-     * Обновляет состояние чата на `WAITING_FOR_INPUT_NAME`.
+     * Изменяет состояние чата на ожидание ввода имени пользователя.
      *
      * @param chatID Идентификатор чата пользователя.
      */
@@ -26,10 +28,10 @@ public class StartCommand {
         stateService.saveState(chatID, WAITING_FOR_INPUT_NAME);
     }
 
-
     /**
-     * Генерирует приветственное сообщение бота.
-     * @return Приветственное сообщение бота.
+     * Получает текст для бота с приветствием и приглашением зарегистрироваться.
+     *
+     * @return Текст для бота с приветствием и приглашением ввести ФИО.
      */
     public String getBotText() {
         return """

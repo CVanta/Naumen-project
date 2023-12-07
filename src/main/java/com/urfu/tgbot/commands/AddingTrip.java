@@ -9,8 +9,8 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class AddingTrip {
-    TripService tripService;
-    StateService stateService;
+    private TripService tripService;
+    private StateService stateService;
 
     @Autowired
     private AddingTrip(TripService tripService, StateService stateService) {

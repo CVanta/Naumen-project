@@ -6,7 +6,7 @@ import org.springframework.stereotype.Component;
 public class HelpCommand{
 
     /**
-     * Генерирует список доступных команд.
+     * Показывает список доступных команд.
      * @return Список доступных команд.
      */
     public String getBotCommand(){

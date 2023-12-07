@@ -30,7 +30,7 @@ public class ProfileCommand {
     public String viewTrips(long chatID){
         User user = userService.getUserByChatID(chatID);
         List<Trip> trips = user.getTripList();
-        if(trips.size() == 0){
+        if(trips == null){
             stateService.updateState(chatID, States.WAITING_FOR_COMMAND);
             return "Вы не записаны ни на одну поездку";
         }

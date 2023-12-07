@@ -19,7 +19,7 @@ public class CommandManager {
 
     private final StateService stateService;
 
-    private final NameEditor nameEditor;
+    private final AddNewUser addNewUser;
 
     private final EditCommand editCommand;
 
@@ -41,7 +41,7 @@ public class CommandManager {
 
     @Autowired
     public CommandManager(StartCommand startCommand, HelpCommand helpCommand, ListCommand listCommand,
-                          StateService stateService, NameEditor nameEditor, EditCommand editCommand,
+                          StateService stateService, AddNewUser addNewUser, EditCommand editCommand,
                           AddCommand addCommand, AddingTrip addingTrip, SignUpCommand signUpCommand,
                           ProfileCommand profileCommand, ViewCommand viewCommand, ShowCommand showCommand,
                           DelTripCommand delTripCommand, DelCommand delCommand) {
@@ -49,7 +49,7 @@ public class CommandManager {
         this.helpCommand = helpCommand;
         this.listCommand = listCommand;
         this.stateService = stateService;
-        this.nameEditor = nameEditor;
+        this.addNewUser = addNewUser;
         this.editCommand = editCommand;
         this.addCommand = addCommand;
         this.addingTrip = addingTrip;
@@ -73,21 +73,21 @@ public class CommandManager {
             switch (state) {
                 case WAITING_FOR_INPUT_NAME -> {
                     try {
-                        answer = nameEditor.editName(chatId, messageText, username);
+                        answer = addNewUser.editName(chatId, messageText, username);
                     } catch (Exception e) {
                         return "Вы не изменили имя";
                     }
                 }
                 case WAITING_FOR_INPUT_INSTITUTE -> {
                     try {
-                        answer = nameEditor.editInstitute(chatId, messageText);
+                        answer = addNewUser.editInstitute(chatId, messageText);
                     } catch (Exception e) {
                         return "Вы не изменили институт";
                     }
                 }
                 case WAITING_FOR_INPUT_PHONE_NUMBER -> {
                     try {
-                        answer = nameEditor.editPhoneNumber(chatId, messageText);
+                        answer = addNewUser.editPhoneNumber(chatId, messageText);
                     } catch (Exception e) {
                         return "Вы не изменили номер телефона";
                     }

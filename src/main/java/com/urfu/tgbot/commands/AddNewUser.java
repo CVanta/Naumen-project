@@ -8,12 +8,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
 @Controller
-public class NameEditor {
+public class AddNewUser {
     private final StateService stateService;
     private final UserService userService;
 
     @Autowired
-    public NameEditor(StateService stateService, UserService userService) {
+    public AddNewUser(StateService stateService, UserService userService) {
         this.stateService = stateService;
         this.userService = userService;
     }

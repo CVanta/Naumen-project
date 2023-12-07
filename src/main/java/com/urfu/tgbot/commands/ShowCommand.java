@@ -49,9 +49,10 @@ public class ShowCommand {
                     .append(passenger.getTgUsername())
                     .append(" ")
                     .append(passenger.getUsername())
-                    .append(passenger.getPhoneNumber())
                     .append(" ")
+                    .append(passenger.getPhoneNumber())
                     .append("\n");
+            cnt +=1;
         }
         return result.toString();
     }

@@ -185,7 +185,7 @@ public class User {
      */
     public void removeTrip(Trip trip) {
         if (this.tripList == null) {
-            this.tripList = new ArrayList<Trip>();
+            this.tripList = new ArrayList<>();
             return;
         }
         this.tripList.remove(trip);

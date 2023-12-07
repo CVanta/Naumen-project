@@ -38,7 +38,7 @@ public class SignUpCommand {
      * Регистрирует пользователя на указанную поездку.
      *
      * @param numberTrip Номер поездки.
-     * @param chatID Идентификатор чата.
+     * @param chatID     Идентификатор чата.
      * @return Текст бота.
      */
     public String registerUser(int numberTrip, long chatID) {
@@ -47,7 +47,7 @@ public class SignUpCommand {
             return "Вы вышли";
         }
         List<Trip> allTrips = tripService.getAvailableTrips();
-        if (numberTrip - 1 > allTrips.size())
+        if (allTrips.size() < numberTrip)
             return "Номера поездки нет в списке";
         Trip trip = allTrips.get(numberTrip - 1);
         if (trip.getDriverID() == chatID)

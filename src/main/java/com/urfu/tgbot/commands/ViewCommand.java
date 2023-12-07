@@ -8,6 +8,9 @@ import org.springframework.stereotype.Component;
 import com.urfu.tgbot.enums.States;
 
 import java.util.List;
+/**
+ * Класс, реализующий команду /view - вывод поездок которые создал данный пользователь.
+ */
 
 @Component
 public class ViewCommand {
@@ -21,9 +24,8 @@ public class ViewCommand {
         this.tripService = tripService;
     }
 
-
     /**
-     * Обновляет состояние чата на `WAITING_FOR_INPUT_SHOW_OR_DEL`.
+     * Изменяет состояние чата на ожидание ввода команды для отображения или удаления поездок.
      *
      * @param chatID Идентификатор чата пользователя.
      */
@@ -32,17 +34,13 @@ public class ViewCommand {
     }
 
     /**
-     * Возвращает текст, который будет отправлен ботом пользователю.
+     * Получает текст для бота, содержащий информацию о поездках для указанного чата.
+     *
      * @param chatID Идентификатор чата пользователя.
-     * @return Текст, который будет отправлен ботом пользователю.
+     * @return Текст для бота с информацией о поездках.
      */
     public String getBotText(long chatID){
         List<Trip> trips = tripService.getAllTripsByChatId(chatID);
-        if(trips.size() == 0)
-        {
-            stateService.updateState(chatID, States.WAITING_FOR_COMMAND);
-            return "Список поездок пуст.";
-        }
         String result = "";
         int num = 1;
         for (Trip trip : trips) {
@@ -52,7 +50,8 @@ public class ViewCommand {
             result += num + ". " + tString + "\n";
             num += 1;
         }
-        result += "0 - для выхода в режим комманд";
+        result += "0 - для выхода в режим команд";
         return result;
     }
 }
+
