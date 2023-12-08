@@ -192,6 +192,10 @@ public class User {
         trip.getPassengers().remove(this);
     }
 
+    public void editTripList(User oldUser){
+        this.tripList = oldUser.getTripList();
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

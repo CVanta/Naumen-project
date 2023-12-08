@@ -105,13 +105,20 @@ public class CommandManager {
 
                 }
                 case WAITING_FOR_INPUT_TRIP_NUMBER -> {
-                    int number;
-                    try {
-                        number = Integer.parseInt(messageText);
-                    } catch (Exception exception) {
-                        return "Введите номер поездки(ЦИФРОЙ!).";
+                    if (messageText.startsWith("0")) {
+                        stateService.updateState(chatId, States.WAITING_FOR_COMMAND);
+                        return "Вы вышли";
                     }
-                    return signUpCommand.registerUser(number, chatId);
+                    if (messageText.startsWith("/signUp")) {
+                        int number;
+                        try {
+                            number = Integer.parseInt(messageText.split(" ")[1]);
+                        } catch (Exception exception) {
+                            return "Введите номер поездки(ЦИФРОЙ!).";
+                        }
+                        return signUpCommand.registerUser(number, chatId);
+                    }
+                    return "Напишите /signUp {номер поездки}, для записи на поездку или 0 для выхода";
                 }
                 case WAITING_FOR_INPUT_EDIT_CONFIRMATION -> answer = editCommand.handleConfirmInput(messageText, chatId);
                 case WAITING_FOR_INPUT_SHOW_OR_DEL -> {
@@ -195,7 +202,7 @@ public class CommandManager {
             default -> {
                 if (String.valueOf(command.charAt(0)).equals("/")) return "Не удалось разпознать команду";
                 else {
-                    return "Ваше сообщение -> " + command + " <-";
+                    return "Не удалось распознать команду.";
                 }
             }
         }

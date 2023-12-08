@@ -29,6 +29,12 @@ public class AddNewUser {
      */
     public String editName(long chatID, String name, String username) throws Exception {
         User user = new User(name, chatID, username);
+        if(userService.isUserExists(chatID)) {
+            User beforeEditUser = userService.getUserByChatID(chatID);
+            if(beforeEditUser.getTripList() != null){
+                user.editTripList(beforeEditUser);
+            }
+        }
         InputHandler inputHandler = new InputHandler();
         try {
             inputHandler.checkFullName(name);
@@ -99,6 +105,4 @@ public class AddNewUser {
         stateService.updateState(chatID, States.WAITING_FOR_INPUT_INSTITUTE);
         return "Введите ваш институт";
     }
-
-
 }

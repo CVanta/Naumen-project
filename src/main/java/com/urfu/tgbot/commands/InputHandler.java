@@ -118,6 +118,18 @@ public class InputHandler {
             throw new NumberFormatException("Невозможно преобразовать в число");
         }
     }
+    /**
+     * Проверяет, находится ли указанное число между 0 и заданным числом.
+     *
+     * @param numberToCheck     число для проверки
+     * @param referenceNumber   заданное число, до которого должно быть меньше
+     * @throws Exception        выбрасывается, если число не находится в требуемом диапазоне
+     */
+    public void checkNumberBetween(int numberToCheck, int referenceNumber) throws Exception {
+        if (numberToCheck <= 0 || numberToCheck > referenceNumber) {
+            throw new Exception("Не сущетсвует поездки с таким номером, выберите поездку из списка.");
+        }
+    }
 }
 
 

@@ -64,6 +64,10 @@ public class UserService {
         return userRepository.findById(chatID).get();
     }
 
+    public boolean isUserExists(long chatId) {
+        return userRepository.findById(chatId).isPresent();
+    }
+
     /**
      * Добавляет поездку к пользователю.
      *
@@ -77,6 +81,5 @@ public class UserService {
         trip.addPassenger(currentUser);
         currentUser.addTrip(trip);
         userRepository.save(currentUser);
-
     }
 }

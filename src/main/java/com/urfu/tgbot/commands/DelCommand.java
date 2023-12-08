@@ -9,6 +9,8 @@ import com.urfu.tgbot.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+
 @Component
 public class DelCommand {
     private final StateService stateService;
@@ -36,7 +38,14 @@ public class DelCommand {
      * @return Ответ бота.
      */
     public String delTrip(Long chatID, int tripNumber){
+        InputHandler inputHandler = new InputHandler();
         User user = userService.getUserByChatID(chatID);
+        try {
+            inputHandler.checkNumberBetween(tripNumber, user.getTripList().size());
+        }
+        catch (Exception e){
+            return e.getMessage();
+        }
         Trip trip = user.getTripList().get(tripNumber - 1);
         trip.incrementFreePlaces();
         tripService.addTrip(trip);
