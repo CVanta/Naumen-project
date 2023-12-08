@@ -1,5 +1,6 @@
 package com.urfu.tgbot.commands;
 
+import com.urfu.tgbot.botLogic.MessageSender;
 import com.urfu.tgbot.enums.States;
 import com.urfu.tgbot.models.Trip;
 import com.urfu.tgbot.models.User;
@@ -7,21 +8,23 @@ import com.urfu.tgbot.services.StateService;
 import com.urfu.tgbot.services.TripService;
 import com.urfu.tgbot.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
-
-import java.util.List;
 
 @Component
 public class DelCommand {
     private final StateService stateService;
     private final UserService userService;
 
+    private final MessageSender messageSender;
+
     private final TripService tripService;
 
     @Autowired
-    public DelCommand(StateService stateService, UserService userService, TripService tripService) {
+    public DelCommand(StateService stateService, UserService userService, @Lazy MessageSender messageSender, TripService tripService) {
         this.stateService = stateService;
         this.userService = userService;
+        this.messageSender = messageSender;
         this.tripService = tripService;
     }
 
@@ -58,6 +61,8 @@ public class DelCommand {
             userService.addUser(user);
         }
         catch (Exception e) {return "Не удалось удалить поездку.";}
+
+        messageSender.sendMessage(trip.getDriverID(),user.getFormattedString() + "отказался от поездки: " + trip.getFormattedString());
 
         return "Ваша запись на поездку успешно удалена.";
     }

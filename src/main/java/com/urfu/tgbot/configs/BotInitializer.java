@@ -1,6 +1,6 @@
 package com.urfu.tgbot.configs;
 
-import com.urfu.tgbot.services.TelegramBot;
+import com.urfu.tgbot.botLogic.TelegramBot;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.context.event.EventListener;

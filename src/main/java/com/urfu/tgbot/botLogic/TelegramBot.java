@@ -1,4 +1,4 @@
-package com.urfu.tgbot.services;
+package com.urfu.tgbot.botLogic;
 
 import com.urfu.tgbot.commands.CommandManager;
 import com.urfu.tgbot.configs.BotConfig;
@@ -9,7 +9,7 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
 @Component
-public class TelegramBot extends TelegramLongPollingBot {
+public class TelegramBot extends TelegramLongPollingBot implements MessageSender{
     private final BotConfig config;
     private final CommandManager commandManager;
 
@@ -61,7 +61,21 @@ public class TelegramBot extends TelegramLongPollingBot {
      * @param chatId идентификатор чата.
      * @param textToSend Сообщение, которое нужно отправить.
      */
-    private void sendMessage(long chatId, String textToSend){
+//    private void sendMessage(long chatId, String textToSend){
+//        SendMessage message = new SendMessage();
+//        message.setChatId(String.valueOf(chatId));
+//        message.setText(textToSend);
+//        try {
+//
+//            execute(message);
+//        }
+//        catch (TelegramApiException exception){
+//
+//        }
+//    }
+
+    @Override
+    public void sendMessage(Long chatId, String textToSend) {
         SendMessage message = new SendMessage();
         message.setChatId(String.valueOf(chatId));
         message.setText(textToSend);
@@ -72,6 +86,5 @@ public class TelegramBot extends TelegramLongPollingBot {
         catch (TelegramApiException exception){
 
         }
-
     }
 }
