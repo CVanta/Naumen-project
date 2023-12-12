@@ -1,5 +1,6 @@
 package com.urfu.tgbot.commands;
 
+import com.urfu.tgbot.botLogic.Keyboard;
 import com.urfu.tgbot.botLogic.MessageSender;
 import com.urfu.tgbot.enums.States;
 import com.urfu.tgbot.models.Trip;
@@ -10,6 +11,7 @@ import com.urfu.tgbot.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
 
 @Component
 public class DelCommand {
@@ -65,5 +67,10 @@ public class DelCommand {
         messageSender.sendMessage(trip.getDriverID(),user.getFormattedString() + "отказался от поездки: " + trip.getFormattedString());
 
         return "Ваша запись на поездку успешно удалена.";
+    }
+
+    public ReplyKeyboardMarkup getDelKeyboard(long chatID){
+        Keyboard keyboard = new Keyboard();
+        return keyboard.getDelNumbers(userService.getUserByChatID(chatID).getTripList().size());
     }
 }

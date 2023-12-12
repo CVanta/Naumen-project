@@ -1,10 +1,12 @@
 package com.urfu.tgbot.commands;
 
+import com.urfu.tgbot.botLogic.Keyboard;
 import com.urfu.tgbot.enums.States;
 import com.urfu.tgbot.services.StateService;
 import com.urfu.tgbot.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
 
 @Component
 public class EditCommand {
@@ -63,6 +65,11 @@ public class EditCommand {
         }
         stateService.updateState(chatID, States.WAITING_FOR_COMMAND);
         return "Бот ожидает следующей команды";
+    }
+
+    public ReplyKeyboardMarkup getEditKeyboard(){
+        Keyboard keyboard = new Keyboard();
+        return keyboard.getYesNoKeyboard();
     }
 
 }

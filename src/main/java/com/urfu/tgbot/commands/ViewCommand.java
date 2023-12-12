@@ -1,11 +1,13 @@
 package com.urfu.tgbot.commands;
 
+import com.urfu.tgbot.botLogic.Keyboard;
 import com.urfu.tgbot.models.Trip;
 import com.urfu.tgbot.services.StateService;
 import com.urfu.tgbot.services.TripService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import com.urfu.tgbot.enums.States;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
 
 import java.util.List;
 /**
@@ -52,6 +54,11 @@ public class ViewCommand {
         }
         result += "0 - для выхода в режим команд";
         return result;
+    }
+
+    public ReplyKeyboardMarkup getViewKeyboard(long chatID){
+        Keyboard keyboard = new Keyboard();
+        return keyboard.getShowOrDelTripNumbers(tripService.getAllTripsByChatId(chatID).size());
     }
 }
 

@@ -1,5 +1,6 @@
 package com.urfu.tgbot.commands;
 
+import com.urfu.tgbot.botLogic.Keyboard;
 import com.urfu.tgbot.enums.States;
 import com.urfu.tgbot.models.Trip;
 import com.urfu.tgbot.models.User;
@@ -8,6 +9,7 @@ import com.urfu.tgbot.services.TripService;
 import com.urfu.tgbot.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
 
 import java.util.List;
 
@@ -62,5 +64,8 @@ public class SignUpCommand {
         return "Вы записались на поездку: " + trip.getFormattedString();
     }
 
-
+    public ReplyKeyboardMarkup getTripNumbersKeyboard(){
+        Keyboard keyboard =  new Keyboard();
+        return keyboard.getTripNumbersKeyboard(tripService.getAvailableTrips().size());
+    }
 }

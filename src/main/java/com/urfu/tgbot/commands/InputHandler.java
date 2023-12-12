@@ -114,6 +114,9 @@ public class InputHandler {
             if (number >= 10) {
                 throw new IllegalArgumentException("Число должно быть меньше 10");
             }
+            if (number < 1){
+                throw new IllegalArgumentException("С вами должен кто-то ехать. Путешествия в одиночку запрещены. (>1)");
+            }
         } catch (NumberFormatException e) {
             throw new NumberFormatException("Невозможно преобразовать в число");
         }
