@@ -1,6 +1,7 @@
 package com.urfu.tgbot.commands;
 
 import com.urfu.tgbot.botLogic.Keyboard;
+import com.urfu.tgbot.botLogic.MessageSender;
 import com.urfu.tgbot.enums.States;
 import com.urfu.tgbot.models.Trip;
 import com.urfu.tgbot.models.User;
@@ -8,6 +9,7 @@ import com.urfu.tgbot.services.StateService;
 import com.urfu.tgbot.services.TripService;
 import com.urfu.tgbot.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
 
@@ -20,11 +22,14 @@ public class SignUpCommand {
 
     private final UserService userService;
 
+    private final MessageSender messageSender;
+
     @Autowired
-    public SignUpCommand(StateService stateService, TripService tripService, UserService userService) {
+    public SignUpCommand(StateService stateService, TripService tripService, UserService userService, @Lazy MessageSender messageSender) {
         this.stateService = stateService;
         this.tripService = tripService;
         this.userService = userService;
+        this.messageSender = messageSender;
     }
 
     /**
@@ -61,6 +66,7 @@ public class SignUpCommand {
         tripService.addUserToTrip(trip, user);
         userService.addTripToUser(trip, user);
         changeState(chatID);
+        messageSender.sendMessage(trip.getDriverID(),  "На поездку " + trip.getFormattedString() + " записался " + user.getFormattedString());
         return "Вы записались на поездку: " + trip.getFormattedString();
     }
 

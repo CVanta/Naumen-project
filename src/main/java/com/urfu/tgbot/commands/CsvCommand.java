@@ -7,19 +7,22 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 import com.urfu.tgbot.botLogic.MessageSender;
+
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.List;
+
 @Component
 public class CsvCommand {
 
     private final TripService tripService;
 
     private final MessageSender messageSender;
+
     @Autowired
-    public CsvCommand(TripService tripService,@Lazy MessageSender messageSender, StateService stateService) {
+    public CsvCommand(TripService tripService, @Lazy MessageSender messageSender) {
         this.tripService = tripService;
-        this.messageSender=messageSender;
+        this.messageSender = messageSender;
     }
 
     /**
@@ -27,7 +30,7 @@ public class CsvCommand {
      *
      * @param chatID Идентификатор чата.
      */
-    public String generateAndSendCsv(long chatID) {
+    public void generateAndSendCsv(long chatID) {
         List<Trip> trips = tripService.getAllTrips();
 
         String csvFilePath = "trips.csv";
@@ -36,15 +39,14 @@ public class CsvCommand {
 
             csvWriter.append("Driver id;Time;Trip Destination;Free Places\n");
             for (Trip trip : trips) {
-                csvWriter.append(String.format("%s;%s;%s;%d\n", trip.getDriverID(),trip.getTimeTrip(), trip.getDestination(), trip.getFreePlaces()));
+                csvWriter.append(String.format("%s;%s;%s;%d\n", trip.getDriverID(), trip.getTimeTrip(), trip.getDestination(), trip.getFreePlaces()));
             }
 
             csvWriter.close();
 
-            messageSender.sendFile(chatID,csvFilePath);
+            messageSender.sendFile(chatID, csvFilePath);
         } catch (IOException e) {
         }
-        return "";
     }
 
 }

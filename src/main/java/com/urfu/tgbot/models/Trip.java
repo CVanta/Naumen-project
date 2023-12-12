@@ -14,7 +14,7 @@ public class Trip {
     @GeneratedValue
     private Long id;
     private long driverID;
-    private String listPassenger;
+
     private String destination;
     private String timeTrip;
     private int freePlaces;
@@ -24,7 +24,6 @@ public class Trip {
 
     public Trip(long driverID, String listPassenger, String destination, String timeTrip, int freePlaces) {
         this.driverID = driverID;
-        this.listPassenger = listPassenger;
         this.destination = destination;
         this.timeTrip = timeTrip;
         this.freePlaces = freePlaces;
@@ -129,7 +128,6 @@ public class Trip {
             Trip trip = new Trip();
             trip.id = this.id;
             trip.driverID = this.driverID;
-            trip.listPassenger = this.listPassenger;
             trip.destination = this.destination;
             trip.timeTrip = this.timeTrip;
             trip.freePlaces = this.freePlaces;

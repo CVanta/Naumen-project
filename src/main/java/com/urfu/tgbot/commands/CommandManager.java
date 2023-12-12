@@ -4,7 +4,7 @@ import com.urfu.tgbot.botLogic.Keyboard;
 import com.urfu.tgbot.enums.States;
 import com.urfu.tgbot.services.StateService;
 import org.checkerframework.checker.units.qual.K;
-import org.graalvm.collections.Pair;
+import org.springframework.data.util.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
@@ -45,12 +45,14 @@ public class CommandManager {
 
     private final ReplyKeyboardMarkup emptyKeyboard = null;
 
+    private final CsvCommand csvCommand;
+
     @Autowired
     public CommandManager(StartCommand startCommand, HelpCommand helpCommand, ListCommand listCommand,
                           StateService stateService, AddNewUser addNewUser, EditCommand editCommand,
                           AddCommand addCommand, AddingTrip addingTrip, SignUpCommand signUpCommand,
                           ProfileCommand profileCommand, ViewCommand viewCommand, ShowCommand showCommand,
-                          DelTripCommand delTripCommand, DelCommand delCommand) {
+                          DelTripCommand delTripCommand, DelCommand delCommand, CsvCommand csvCommand) {
         this.startCommand = startCommand;
         this.helpCommand = helpCommand;
         this.listCommand = listCommand;
@@ -65,6 +67,7 @@ public class CommandManager {
         this.showCommand = showCommand;
         this.delTripCommand = delTripCommand;
         this.delCommand = delCommand;
+        this.csvCommand = csvCommand;
     }
 
 
@@ -75,7 +78,7 @@ public class CommandManager {
         if (state == null){
             startCommand.changeState(chatId);
             String answerText = startCommand.getBotText();
-            return Pair.create(answerText, emptyKeyboard);
+            return Pair.of(answerText, emptyKeyboard);
         }
         else{
             switch (state) {
@@ -83,110 +86,110 @@ public class CommandManager {
                     try {
                         answer = addNewUser.editName(chatId, messageText, username);
                     } catch (Exception e) {
-                        return Pair.create("Вы не изменили имя", emptyKeyboard);
+                        return Pair.of("Вы не изменили имя", emptyKeyboard);
                     }
                 }
                 case WAITING_FOR_INPUT_INSTITUTE -> {
                     try {
                         answer = addNewUser.editInstitute(chatId, messageText);
                     } catch (Exception e) {
-                        return Pair.create("Вы не изменили институт", emptyKeyboard);
+                        return Pair.of("Вы не изменили институт", emptyKeyboard);
                     }
                 }
                 case WAITING_FOR_INPUT_PHONE_NUMBER -> {
                     try {
                         answer = addNewUser.editPhoneNumber(chatId, messageText);
                     } catch (Exception e) {
-                        return Pair.create("Вы не изменили номер телефона", emptyKeyboard);
+                        return Pair.of("Вы не изменили номер телефона", emptyKeyboard);
                     }
                 }
                 case WAITING_FOR_INPUT_TIME -> {
                     answer = addingTrip.addTimeTrip(chatId, messageText);
                     if (stateService.getState(chatId) == States.WAITING_FOR_INPUT_TIME){
-                        return Pair.create(answer, emptyKeyboard);
+                        return Pair.of(answer, emptyKeyboard);
                     }
-                    return Pair.create(answer, keyboard.getNumbers1to9Keyboard());
+                    return Pair.of(answer, keyboard.getNumbers1to9Keyboard());
                 }
 
                 case WAITING_FOR_INPUT_PLACES -> {
                     answer = addingTrip.addPlacesTrip(chatId, messageText);
-                    return Pair.create(answer, keyboard.getDefaultCommandKeyboard());
+                    return Pair.of(answer, keyboard.getDefaultCommandKeyboard());
                 }
 
                 case WAITING_FOR_INPUT_DESTINATION -> {
-                    return Pair.create(addingTrip.addDriverDestinationTrip(chatId, messageText), emptyKeyboard);
+                    return Pair.of(addingTrip.addDriverDestinationTrip(chatId, messageText), emptyKeyboard);
 
                 }
                 case WAITING_FOR_INPUT_TRIP_NUMBER -> {
                     if (messageText.startsWith("0")) {
                         stateService.updateState(chatId, States.WAITING_FOR_COMMAND);
-                        return Pair.create("Вы вышли", keyboard.getDefaultCommandKeyboard());
+                        return Pair.of("Вы вышли", keyboard.getDefaultCommandKeyboard());
                     }
                     if (messageText.startsWith("/signUp")) {
                         int number;
                         try {
                             number = Integer.parseInt(messageText.split(" ")[1]);
                         } catch (Exception exception) {
-                            return Pair.create("Введите номер поездки(ЦИФРОЙ!).", signUpCommand.getTripNumbersKeyboard());
+                            return Pair.of("Введите номер поездки(ЦИФРОЙ!).", signUpCommand.getTripNumbersKeyboard());
                         }
                         answer = signUpCommand.registerUser(number, chatId);
                         if (stateService.getState(chatId) == States.WAITING_FOR_INPUT_TRIP_NUMBER)
-                            return Pair.create(answer, signUpCommand.getTripNumbersKeyboard());
-                        return Pair.create(answer, keyboard.getDefaultCommandKeyboard());
+                            return Pair.of(answer, signUpCommand.getTripNumbersKeyboard());
+                        return Pair.of(answer, keyboard.getDefaultCommandKeyboard());
                     }
-                    return Pair.create("Напишите /signUp {номер поездки}, для записи на поездку или 0 для выхода", signUpCommand.getTripNumbersKeyboard());
+                    return Pair.of("Напишите /signUp {номер поездки}, для записи на поездку или 0 для выхода", signUpCommand.getTripNumbersKeyboard());
                 }
                 case WAITING_FOR_INPUT_EDIT_CONFIRMATION -> {
                     answer = editCommand.handleConfirmInput(messageText, chatId);
                     if(stateService.getState(chatId) ==  States.WAITING_FOR_INPUT_EDIT_CONFIRMATION)
-                        return Pair.create(answer, keyboard.getYesNoKeyboard());
+                        return Pair.of(answer, keyboard.getYesNoKeyboard());
                     if (stateService.getState(chatId) ==  States.WAITING_FOR_INPUT_NAME)
-                        return Pair.create(answer, emptyKeyboard);
-                    return Pair.create(answer, keyboard.getDefaultCommandKeyboard());
+                        return Pair.of(answer, emptyKeyboard);
+                    return Pair.of(answer, keyboard.getDefaultCommandKeyboard());
                 }
                 case WAITING_FOR_INPUT_SHOW_OR_DEL -> {
                     if (messageText.startsWith("0")) {
                         stateService.updateState(chatId, States.WAITING_FOR_COMMAND);
-                        return Pair.create("Вы вышли", keyboard.getDefaultCommandKeyboard());
+                        return Pair.of("Вы вышли", keyboard.getDefaultCommandKeyboard());
                     }
                     if (messageText.startsWith("/show")) {
                         int number;
                         try {
                             number = Integer.parseInt(messageText.split(" ")[1]);
                         } catch (Exception exception) {
-                            return Pair.create("Введите номер поездки(ЦИФРОЙ!).", viewCommand.getViewKeyboard(chatId));
+                            return Pair.of("Введите номер поездки(ЦИФРОЙ!).", viewCommand.getViewKeyboard(chatId));
                         }
                         showCommand.changeState(chatId);
-                        return Pair.create(showCommand.getBotText(chatId, number), keyboard.getDefaultCommandKeyboard());
+                        return Pair.of(showCommand.getBotText(chatId, number), keyboard.getDefaultCommandKeyboard());
                     }
                     if(messageText.startsWith("/del")){
                         int number;
                         try {
                             number = Integer.parseInt(messageText.split(" ")[1]);
                         } catch (Exception exception) {
-                            return Pair.create("Введите номер поездки(ЦИФРОЙ!).", viewCommand.getViewKeyboard(chatId));
+                            return Pair.of("Введите номер поездки(ЦИФРОЙ!).", viewCommand.getViewKeyboard(chatId));
                         }
                         delTripCommand.changeState(chatId);
-                        return Pair.create(delTripCommand.delTrip(chatId, number), keyboard.getDefaultCommandKeyboard());
+                        return Pair.of(delTripCommand.delTrip(chatId, number), keyboard.getDefaultCommandKeyboard());
                     }
                     else
                     {
-                        return Pair.create("Введенное сообщение не соответствует формату ввода", viewCommand.getViewKeyboard(chatId));
+                        return Pair.of("Введенное сообщение не соответствует формату ввода", viewCommand.getViewKeyboard(chatId));
                     }
                 }
                 case WAITING_FOR_INPUT_DEL -> {
                     if (messageText.startsWith("0")) {
                         stateService.updateState(chatId, States.WAITING_FOR_COMMAND);
-                        return Pair.create("Вы вышли", keyboard.getDefaultCommandKeyboard());
+                        return Pair.of("Вы вышли", keyboard.getDefaultCommandKeyboard());
                     }
                     int number;
                     try {
                         number = Integer.parseInt(messageText.split(" ")[1]);
                     } catch (Exception exception) {
-                        return Pair.create("Введите номер поездки(ЦИФРОЙ!).", delCommand.getDelKeyboard(chatId));
+                        return Pair.of("Введите номер поездки(ЦИФРОЙ!).", delCommand.getDelKeyboard(chatId));
                     }
                     delCommand.changeState(chatId);
-                    return Pair.create(delCommand.delTrip(chatId, number), keyboard.getDefaultCommandKeyboard());
+                    return Pair.of(delCommand.delTrip(chatId, number), keyboard.getDefaultCommandKeyboard());
                 }
                 case WAITING_FOR_COMMAND -> {
                     return readCommand(messageText, chatId, username);
@@ -194,7 +197,7 @@ public class CommandManager {
             }
         }
 
-        return Pair.create(answer, keyboard.getDefaultCommandKeyboard());
+        return Pair.of(answer, keyboard.getDefaultCommandKeyboard());
     }
 
 
@@ -204,38 +207,42 @@ public class CommandManager {
         switch (command) {
             case "/start" -> {
                 startCommand.changeState(chatID);
-                return Pair.create(startCommand.getBotText(), emptyKeyboard);
+                return Pair.of(startCommand.getBotText(), emptyKeyboard);
             }
             case "/help" -> {
                 ReplyKeyboardMarkup defaultCommandKeyboard = keyboard.getDefaultCommandKeyboard();
                 String answer = helpCommand.getBotCommand();
-                return Pair.create(answer, defaultCommandKeyboard);
+                return Pair.of(answer, defaultCommandKeyboard);
             }
             case "/list" -> {
                 listCommand.changeState(chatID);
-                return Pair.create(listCommand.getAllAvailableTrips(), signUpCommand.getTripNumbersKeyboard());
+                return Pair.of(listCommand.getAllAvailableTrips(), signUpCommand.getTripNumbersKeyboard());
             }
             case "/edit" -> {
                 editCommand.updateState(chatID);
-                return Pair.create(editCommand.getBotText(chatID), keyboard.getYesNoKeyboard());
+                return Pair.of(editCommand.getBotText(chatID), keyboard.getYesNoKeyboard());
             }
             case "/add" -> {
                 addCommand.updateState(chatID);
-                return Pair.create(addCommand.getBotText(), emptyKeyboard);
+                return Pair.of(addCommand.getBotText(), emptyKeyboard);
             }
             case "/profile" -> {
                 profileCommand.changeState(chatID);
-                return Pair.create(profileCommand.viewTrips(chatID), delCommand.getDelKeyboard(chatID));
+                return Pair.of(profileCommand.viewTrips(chatID), delCommand.getDelKeyboard(chatID));
+            }
+            case "/csv" ->{
+                csvCommand.generateAndSendCsv(chatID);
+                return Pair.of("", keyboard.getDefaultCommandKeyboard());
             }
             case "/view" -> {
                 viewCommand.changeState(chatID);
                 String answer = viewCommand.getBotText(chatID);
-                return Pair.create(answer, viewCommand.getViewKeyboard(chatID));
+                return Pair.of(answer, viewCommand.getViewKeyboard(chatID));
             }
             default -> {
                 ReplyKeyboardMarkup replyKeyboardMarkup = keyboard.getDefaultCommandKeyboard();
                 String answer = "Не удалось распознать команду";
-                return  Pair.create(answer, replyKeyboardMarkup);
+                return  Pair.of(answer, replyKeyboardMarkup);
             }
         }
     }

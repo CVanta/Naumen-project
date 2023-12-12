@@ -63,9 +63,6 @@ public class DelCommand {
             userService.addUser(user);
         }
         catch (Exception e) {return "Не удалось удалить поездку.";}
-
-        messageSender.sendMessage(trip.getDriverID(),user.getFormattedString() + "отказался от поездки: " + trip.getFormattedString());
-
         return "Ваша запись на поездку успешно удалена.";
     }
 
