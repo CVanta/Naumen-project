@@ -1,4 +1,4 @@
-package com.example.TG_BOT;
+package com.urfu.tgbot;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
