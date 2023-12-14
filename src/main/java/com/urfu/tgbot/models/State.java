@@ -5,6 +5,9 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
+/**
+ * Класс сущности, представляющий состояние чата.
+ */
 @Entity
 @Table(name = "states")
 public class State {
@@ -22,20 +25,12 @@ public class State {
         this.state = state;
     }
 
-    public Long getChatId() {
-        return chatId;
-    }
-
-    private void setChatId(Long chatId) {
-        this.chatId = chatId;
-    }
-
+    /**
+     * Возвращает текущее состояние чата.
+     *
+     * @return Текущее состояние чата.
+     */
     public States getState() {
         return state;
     }
-
-    private void setState(States state) {
-        this.state = state;
-    }
-
 }

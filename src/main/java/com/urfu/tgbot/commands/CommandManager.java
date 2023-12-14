@@ -6,7 +6,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
 
-
+/**
+ * Этот класс управляет обработкой пользовательских команд в Telegram-боте.
+ */
 @Component
 @Controller
 public class CommandManager {
@@ -20,7 +22,6 @@ public class CommandManager {
 
     private final EditCommand editCommand;
 
-
     @Autowired
     public CommandManager(StartCommand startCommand, HelpCommand helpCommand, StateService stateService, NameEditor nameEditor, EditCommand editCommand) {
         this.startCommand = startCommand;
@@ -30,7 +31,13 @@ public class CommandManager {
         this.editCommand = editCommand;
     }
 
-
+    /**
+     * Обрабатывает вводимые пользователем данные и реагирует соответствующим образом в зависимости от текущего состояния.
+     *
+     * @param messageText вводимое пользователем сообщение
+     * @param chatId идентификатор чата пользователя
+     * @return ответ бота на вводимые пользователем данные
+     */
     public String readInput(String messageText, long chatId) {
         States state = stateService.getState(chatId);
         String answer = messageText;
@@ -60,17 +67,20 @@ public class CommandManager {
                     return "Вы не изменили номер телефона";
                 }
             }
-
             case WAITING_FOR_INPUT_EDIT_CONFIRMATION -> answer = editCommand.handleConfirmInput(messageText, chatId);
 
             case WAITING_FOR_COMMAND -> answer = readCommand(messageText, chatId);
-
         }
-
         return answer;
     }
 
-
+    /**
+     * Обрабатывает пользовательский ввод для определенной команды.
+     *
+     * @param command команда, введенная пользователем
+     * @param chatID идентификатор чата пользователя
+     * @return ответ бота на команду пользователя
+     */
     public String readCommand(String command, long chatID) {
         switch (command) {
             case "/start" -> {

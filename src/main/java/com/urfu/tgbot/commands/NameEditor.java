@@ -7,6 +7,9 @@ import com.urfu.tgbot.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
+/**
+ * Этот класс реализует изменени профиля пользователя
+ */
 @Controller
 public class NameEditor {
     private final StateService stateService;
@@ -18,6 +21,14 @@ public class NameEditor {
         this.userService = userService;
     }
 
+    /**
+     * Изменяет имя пользователя.
+     *
+     * @param chatID Идентификатор чата.
+     * @param name Имя пользователя.
+     * @return Текст бота.
+     * @throws Exception Если возникла ошибка при изменении имени пользователя.
+     */
     public String editName(long chatID, String name) throws Exception {
         User user = new User(name, chatID);
         InputHandler inputHandler = new InputHandler();
@@ -36,6 +47,14 @@ public class NameEditor {
         return "Введите номер телефона";
     }
 
+    /**
+     * Изменяет институт пользователя.
+     *
+     * @param chatID Идентификатор чата.
+     * @param institute Институт пользователя.
+     * @return Текст бота.
+     * @throws Exception Если возникла ошибка при изменении института пользователя.
+     */
     public String editInstitute(long chatID, String institute) throws Exception {
         InputHandler inputHandler = new InputHandler();
         try {
@@ -55,6 +74,14 @@ public class NameEditor {
         return "Вы успешно зарегистрировались. Ваш профиль:" + newUser.getFormattedString();
     }
 
+    /**
+     * Изменяет номер телефона пользователя.
+     *
+     * @param chatID Идентификатор чата.
+     * @param phoneNumber Номер телефона пользователя.
+     * @return Текст бота.
+     * @throws Exception Если возникла ошибка при изменении номера телефона пользователя.
+     */
     public String editPhoneNumber(long chatID, String phoneNumber) throws Exception {
         InputHandler inputHandler = new InputHandler();
         try {
@@ -73,6 +100,4 @@ public class NameEditor {
         stateService.updateState(chatID, States.WAITING_FOR_INPUT_INSTITUTE);
         return "Введите ваш институт";
     }
-
-
 }

@@ -8,8 +8,14 @@ import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
+/**
+ * Модульные тесты для класса `StartCommand`.
+ */
 public class StartCommandTest {
 
+    /**
+     * Проверяет, что метод `GetBotText()` отправляет нужный текст.
+     */
     @Test
     public void testGetBotText() {
         StartCommand startCommand = new StartCommand(null);
@@ -22,6 +28,9 @@ public class StartCommandTest {
     }
 
 
+    /**
+     * Проверяет, что метод `ChangeState()` корректно меняет состояние чата.
+     */
     @Test
     public void testChangeState() {
         StateService stateService = mock(StateService.class);

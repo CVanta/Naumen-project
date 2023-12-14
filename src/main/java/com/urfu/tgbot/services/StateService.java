@@ -10,31 +10,37 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Класс сервиса для управления состояниями Telegram-бота.
+ */
 @Component
 @Service
 public class StateService {
     private final StatesRepository statesRepository;
-    private List<State> states;
 
     @Autowired
     public StateService(StatesRepository statesRepository) {
         this.statesRepository = statesRepository;
     }
 
-
-    public List<State> getAllStates() {
-        List<State> allStates = new ArrayList<>();
-        statesRepository.findAll().forEach(allStates::add);
-        return states;
-    }
-
-
+    /**
+     * Сохраняет новое состояние в базу данных.
+     *
+     * @param chatID Идентификатор чата.
+     * @param state Состояние для сохранения.
+     */
     public State saveState(Long chatID, States state) {
         State newState = new State(chatID, state);
         statesRepository.save(newState);
         return newState;
     }
 
+    /**
+     * Обновляет существующее состояние в базе данных.
+     *
+     * @param chatID Идентификатор чата.
+     * @param state Новое состояние.
+     */
     public State updateState(Long chatID, States state) {
         State newState = new State(chatID, state);
         statesRepository.deleteById(chatID);
@@ -42,11 +48,14 @@ public class StateService {
         return newState;
     }
 
+    /**
+     * Возвраащает текущее состояние бота.
+     * @param chatID Идентификатор чата.
+     * @return Текущее состояние бота.
+     */
     public States getState(Long chatID) {
         if (statesRepository.findById(chatID).isPresent())
             return statesRepository.findById(chatID).get().getState();
         return null;
     }
-
-
 }

@@ -4,8 +4,14 @@ import org.testng.annotations.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+/**
+ * Модульные тесты для класса `HelpCommand`.
+ */
 public class HelpCommandTest {
 
+    /**
+     * Проверяет, что метод `get Boot Command()` корректно генерирует список доступных команд.
+     */
     @Test
     public void testGetBotCommand() {
         HelpCommand helpCommand = new HelpCommand();

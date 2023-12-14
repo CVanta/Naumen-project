@@ -6,24 +6,35 @@ import com.urfu.tgbot.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+/**
+ * Класс предоставляет обработку команды /edit
+ */
 @Component
 public class EditCommand {
 
     private final StateService stateService;
     private final UserService userService;
 
-
     @Autowired
     public EditCommand(StateService stateService, UserService userService) {
         this.stateService = stateService;
         this.userService = userService;
-
     }
 
+    /**
+     * Обновляет состояние чата на `WAITING_FOR_INPUT_EDIT_CONFIRMATION`.
+     *
+     * @param chatID Идентификатор чата пользователя.
+     */
     public void updateState(long chatID) {
         stateService.updateState(chatID, States.WAITING_FOR_INPUT_EDIT_CONFIRMATION);
     }
 
+    /**
+     * Генерирует сообщение подтверждения от бота для редактирования профиля.
+     * @param chatID Идентификатор чата пользователя.
+     * @return Сообщение подтверждения от бота для редактирования профиля.
+     */
     public String getBotText(long chatID) {
         String userString = userService.getUserByChatID(chatID).getFormattedString();
         return """
@@ -34,6 +45,12 @@ public class EditCommand {
                 (введите "Да" или "Нет")""";
     }
 
+    /**
+     * Обрабатывает ввод подтверждения пользователя для редактирования профиля.
+     * @param input Ввод пользователя.
+     * @param chatID Идентификатор чата пользователя.
+     * @return Ответ бота на основе ввода пользователя.
+     */
     public String handleConfirmInput(String input, long chatID) {
         InputHandler inputHandler = new InputHandler();
         try {
@@ -48,6 +65,5 @@ public class EditCommand {
         stateService.updateState(chatID, States.WAITING_FOR_COMMAND);
         return "Бот ожидает следующей команды";
     }
-
 }
 
