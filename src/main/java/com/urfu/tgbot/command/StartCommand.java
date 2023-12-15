@@ -1,16 +1,17 @@
-package com.urfu.tgbot.commands;
+package com.urfu.tgbot.command;
 
 
-import com.urfu.tgbot.services.StateService;
+import com.urfu.tgbot.service.StateService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
 
-import static com.urfu.tgbot.enums.States.WAITING_FOR_INPUT_NAME;
+import static com.urfu.tgbot.enums.State.WAITING_FOR_INPUT_NAME;
 
 /**
  * Класс, представляющий обработку стартовой команды бота.
  */
-@Controller
+@Component
 public class StartCommand {
 
     private final StateService stateService;

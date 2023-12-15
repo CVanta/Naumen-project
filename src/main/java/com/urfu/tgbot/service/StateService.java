@@ -1,14 +1,10 @@
-package com.urfu.tgbot.services;
+package com.urfu.tgbot.service;
 
-import com.urfu.tgbot.enums.States;
-import com.urfu.tgbot.models.State;
-import com.urfu.tgbot.repositories.StatesRepository;
+import com.urfu.tgbot.enums.State;
+import com.urfu.tgbot.repository.StatesRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Класс сервиса для управления состояниями Telegram-бота.
@@ -29,8 +25,8 @@ public class StateService {
      * @param chatID Идентификатор чата.
      * @param state Состояние для сохранения.
      */
-    public State saveState(Long chatID, States state) {
-        State newState = new State(chatID, state);
+    public com.urfu.tgbot.model.State saveState(Long chatID, State state) {
+        com.urfu.tgbot.model.State newState = new com.urfu.tgbot.model.State(chatID, state);
         statesRepository.save(newState);
         return newState;
     }
@@ -41,8 +37,8 @@ public class StateService {
      * @param chatID Идентификатор чата.
      * @param state Новое состояние.
      */
-    public State updateState(Long chatID, States state) {
-        State newState = new State(chatID, state);
+    public com.urfu.tgbot.model.State updateState(Long chatID, State state) {
+        com.urfu.tgbot.model.State newState = new com.urfu.tgbot.model.State(chatID, state);
         statesRepository.deleteById(chatID);
         statesRepository.save(newState);
         return newState;
@@ -53,7 +49,7 @@ public class StateService {
      * @param chatID Идентификатор чата.
      * @return Текущее состояние бота.
      */
-    public States getState(Long chatID) {
+    public State getState(Long chatID) {
         if (statesRepository.findById(chatID).isPresent())
             return statesRepository.findById(chatID).get().getState();
         return null;

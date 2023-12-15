@@ -1,4 +1,4 @@
-package com.urfu.tgbot.commands;
+package com.urfu.tgbot.command;
 
 /**
  * Класс для обработки входных данных, включая проверку ФИО, номера телефона, института и т.д.

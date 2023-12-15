@@ -1,7 +1,7 @@
-package com.urfu.tgbot.services;
+package com.urfu.tgbot.service;
 
-import com.urfu.tgbot.models.User;
-import com.urfu.tgbot.repositories.UserRepository;
+import com.urfu.tgbot.model.User;
+import com.urfu.tgbot.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 

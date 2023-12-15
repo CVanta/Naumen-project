@@ -1,14 +1,14 @@
-package com.urfu.tgbot.configs;
+package com.urfu.tgbot.config;
 
 
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
+import org.springframework.stereotype.Component;
 
 /**
  * Класс для настройки Telegram-бота.
  */
-@Configuration
+@Component
 @PropertySource("application.properties")
 public class BotConfig {
     @Value("${bot.name}")
@@ -25,15 +25,6 @@ public class BotConfig {
         return botName;
     }
 
-    /**
-     * Задает имя Telegram-бота.
-     *
-     * @param botName Имя телеграм-бота.
-     */
-
-    public void setBotName(String botName) {
-        this.botName = botName;
-    }
 
     /**
      * Возвращает токен Telegram-бота.
@@ -42,14 +33,5 @@ public class BotConfig {
      */
     public String getBotToken() {
         return botToken;
-    }
-
-    /**
-     * Задает токен Telegram-бота.
-     *
-     * @param botToken Токен телеграм-бота
-     */
-    public void setBotToken(String botToken) {
-        this.botToken = botToken;
     }
 }

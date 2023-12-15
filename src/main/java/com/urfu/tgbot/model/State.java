@@ -1,6 +1,5 @@
-package com.urfu.tgbot.models;
+package com.urfu.tgbot.model;
 
-import com.urfu.tgbot.enums.States;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
@@ -14,13 +13,13 @@ public class State {
     @Id
     private Long chatId;
 
-    private States state;
+    private com.urfu.tgbot.enums.State state;
 
     public State() {
 
     }
 
-    public State(Long chatId, States state) {
+    public State(Long chatId, com.urfu.tgbot.enums.State state) {
         this.chatId = chatId;
         this.state = state;
     }
@@ -30,7 +29,7 @@ public class State {
      *
      * @return Текущее состояние чата.
      */
-    public States getState() {
+    public com.urfu.tgbot.enums.State getState() {
         return state;
     }
 }

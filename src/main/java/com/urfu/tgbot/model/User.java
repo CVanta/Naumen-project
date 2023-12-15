@@ -1,4 +1,4 @@
-package com.urfu.tgbot.models;
+package com.urfu.tgbot.model;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;

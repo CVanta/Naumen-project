@@ -1,6 +1,9 @@
 package com.urfu.tgbot.enums;
 
-public enum States {
+/**
+ * Состояния тг_Бота.
+ */
+public enum State {
     WAITING_FOR_COMMAND,
     WAITING_FOR_INPUT_NAME,
     WAITING_FOR_INPUT_INSTITUTE,

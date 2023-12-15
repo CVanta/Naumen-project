@@ -1,9 +1,9 @@
-package com.urfu.tgbot.commands;
+package com.urfu.tgbot.command;
 
-import com.urfu.tgbot.services.StateService;
+import com.urfu.tgbot.service.StateService;
 import org.junit.jupiter.api.Test;
 
-import static com.urfu.tgbot.enums.States.WAITING_FOR_INPUT_NAME;
+import static com.urfu.tgbot.enums.State.WAITING_FOR_INPUT_NAME;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;

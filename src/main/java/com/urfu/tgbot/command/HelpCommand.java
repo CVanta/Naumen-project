@@ -1,4 +1,4 @@
-package com.urfu.tgbot.commands;
+package com.urfu.tgbot.command;
 
 import org.springframework.stereotype.Component;
 

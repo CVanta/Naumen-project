@@ -1,6 +1,6 @@
-package com.urfu.tgbot.repositories;
+package com.urfu.tgbot.repository;
 
-import com.urfu.tgbot.models.State;
+import com.urfu.tgbot.model.State;
 import org.springframework.data.repository.CrudRepository;
 
 public interface StatesRepository extends CrudRepository<State, Long> {

@@ -1,9 +1,9 @@
-package com.urfu.tgbot.commands;
+package com.urfu.tgbot.command;
 
-import com.urfu.tgbot.enums.States;
-import com.urfu.tgbot.models.User;
-import com.urfu.tgbot.services.StateService;
-import com.urfu.tgbot.services.UserService;
+import com.urfu.tgbot.enums.State;
+import com.urfu.tgbot.model.User;
+import com.urfu.tgbot.service.StateService;
+import com.urfu.tgbot.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
@@ -43,7 +43,7 @@ public class NameEditor {
             userService.deleteUser(user);
             userService.addUser(user);
         }
-        stateService.updateState(chatID, States.WAITING_FOR_INPUT_PHONE_NUMBER);
+        stateService.updateState(chatID, State.WAITING_FOR_INPUT_PHONE_NUMBER);
         return "Введите номер телефона";
     }
 
@@ -70,7 +70,7 @@ public class NameEditor {
                 .build();
         userService.deleteUser(newUser);
         userService.addUser(newUser);
-        stateService.updateState(chatID, States.WAITING_FOR_COMMAND);
+        stateService.updateState(chatID, State.WAITING_FOR_COMMAND);
         return "Вы успешно зарегистрировались. Ваш профиль:" + newUser.getFormattedString();
     }
 
@@ -97,7 +97,7 @@ public class NameEditor {
                 .build();
         userService.deleteUser(newUser);
         userService.addUser(newUser);
-        stateService.updateState(chatID, States.WAITING_FOR_INPUT_INSTITUTE);
+        stateService.updateState(chatID, State.WAITING_FOR_INPUT_INSTITUTE);
         return "Введите ваш институт";
     }
 }

@@ -1,16 +1,14 @@
-package com.urfu.tgbot.commands;
+package com.urfu.tgbot.command;
 
-import com.urfu.tgbot.enums.States;
-import com.urfu.tgbot.services.StateService;
+import com.urfu.tgbot.enums.State;
+import com.urfu.tgbot.service.StateService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Controller;
 
 /**
  * Этот класс управляет обработкой пользовательских команд в Telegram-боте.
  */
 @Component
-@Controller
 public class CommandManager {
 
     private final StartCommand startCommand;
@@ -38,14 +36,15 @@ public class CommandManager {
      * @param chatId идентификатор чата пользователя
      * @return ответ бота на вводимые пользователем данные
      */
-    public String readInput(String messageText, long chatId) {
-        States state = stateService.getState(chatId);
+    public String handleInputUpdateState(String messageText, long chatId) {
+        State state = stateService.getState(chatId);
         String answer = messageText;
+        if (state == null){
+            startCommand.changeState(chatId);
+            answer = startCommand.getBotText();
+            return answer;
+        }
         switch (state) {
-            case null -> {
-                startCommand.changeState(chatId);
-                answer = startCommand.getBotText();
-            }
             case WAITING_FOR_INPUT_NAME -> {
                 try {
                     answer = nameEditor.editName(chatId, messageText);
@@ -69,7 +68,7 @@ public class CommandManager {
             }
             case WAITING_FOR_INPUT_EDIT_CONFIRMATION -> answer = editCommand.handleConfirmInput(messageText, chatId);
 
-            case WAITING_FOR_COMMAND -> answer = readCommand(messageText, chatId);
+            case WAITING_FOR_COMMAND -> answer = handleCommand(messageText, chatId);
         }
         return answer;
     }
@@ -81,7 +80,7 @@ public class CommandManager {
      * @param chatID идентификатор чата пользователя
      * @return ответ бота на команду пользователя
      */
-    public String readCommand(String command, long chatID) {
+    private String handleCommand(String command, long chatID) {
         switch (command) {
             case "/start" -> {
                 startCommand.changeState(chatID);
@@ -95,7 +94,7 @@ public class CommandManager {
                 return editCommand.getBotText(chatID);
             }
             default -> {
-                return "Не удалось разпознать команду";
+                return "Не удалось распознать команду";
             }
         }
     }
