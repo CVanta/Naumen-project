@@ -3,12 +3,12 @@ package com.urfu.tgbot.service;
 import com.urfu.tgbot.model.User;
 import com.urfu.tgbot.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 /**
  * Класс обслуживания для управления пользователями
  */
-@Component
+@Service
 public class UserService {
     private final UserRepository userRepository;
 
@@ -35,14 +35,14 @@ public class UserService {
      * Удаляет пользователя из базы данных.
      *
      * @param user Пользователь для удаления.
-     * @throws Exception Если пользователь не существует.
      */
-    public void deleteUser(User user) throws Exception {
-        User userFromDb = userRepository.findById(user.getChatID()).get();
-        if (userFromDb == null) {
-            throw new Exception("user not exist");
-        }
+    public void deleteUser(User user){
         userRepository.delete(user);
+    }
+
+    public void changeUser(User user) throws Exception{
+        deleteUser(user);
+        addUser(user);
     }
 
     /**

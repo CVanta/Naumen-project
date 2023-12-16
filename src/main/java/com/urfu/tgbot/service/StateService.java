@@ -1,47 +1,40 @@
 package com.urfu.tgbot.service;
 
-import com.urfu.tgbot.enums.State;
-import com.urfu.tgbot.repository.StatesRepository;
+import com.urfu.tgbot.enums.StateEnum;
+import com.urfu.tgbot.model.State;
+import com.urfu.tgbot.repository.StateRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
+
+import java.util.Optional;
 
 /**
  * Класс сервиса для управления состояниями Telegram-бота.
  */
-@Component
 @Service
 public class StateService {
-    private final StatesRepository statesRepository;
+    private final StateRepository stateRepository;
 
     @Autowired
-    public StateService(StatesRepository statesRepository) {
-        this.statesRepository = statesRepository;
+    public StateService(StateRepository stateRepository) {
+        this.stateRepository = stateRepository;
     }
 
     /**
-     * Сохраняет новое состояние в базу данных.
-     *
-     * @param chatID Идентификатор чата.
-     * @param state Состояние для сохранения.
-     */
-    public com.urfu.tgbot.model.State saveState(Long chatID, State state) {
-        com.urfu.tgbot.model.State newState = new com.urfu.tgbot.model.State(chatID, state);
-        statesRepository.save(newState);
-        return newState;
-    }
-
-    /**
-     * Обновляет существующее состояние в базе данных.
+     * Обновляет состояние в базе данных.
      *
      * @param chatID Идентификатор чата.
      * @param state Новое состояние.
      */
-    public com.urfu.tgbot.model.State updateState(Long chatID, State state) {
-        com.urfu.tgbot.model.State newState = new com.urfu.tgbot.model.State(chatID, state);
-        statesRepository.deleteById(chatID);
-        statesRepository.save(newState);
-        return newState;
+    public void updateState(Long chatID, StateEnum state) {
+        State newState = new State(chatID, state);
+        if(stateRepository.findById(chatID).isEmpty()){
+            stateRepository.save(newState);
+        }
+        else {
+            stateRepository.deleteById(chatID);
+            stateRepository.save(newState);
+        }
     }
 
     /**
@@ -49,9 +42,8 @@ public class StateService {
      * @param chatID Идентификатор чата.
      * @return Текущее состояние бота.
      */
-    public State getState(Long chatID) {
-        if (statesRepository.findById(chatID).isPresent())
-            return statesRepository.findById(chatID).get().getState();
-        return null;
+    public StateEnum getState(Long chatID) {
+        Optional<State> state = stateRepository.findById(chatID);
+        return state.map(State::getState).orElse(null);
     }
 }

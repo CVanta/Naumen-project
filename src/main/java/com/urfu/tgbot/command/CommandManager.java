@@ -1,9 +1,11 @@
 package com.urfu.tgbot.command;
 
-import com.urfu.tgbot.enums.State;
+import com.urfu.tgbot.enums.StateEnum;
 import com.urfu.tgbot.service.StateService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import static com.urfu.tgbot.enums.StateEnum.WAITING_FOR_INPUT_NAME;
 
 /**
  * Этот класс управляет обработкой пользовательских команд в Telegram-боте.
@@ -37,10 +39,10 @@ public class CommandManager {
      * @return ответ бота на вводимые пользователем данные
      */
     public String handleInputUpdateState(String messageText, long chatId) {
-        State state = stateService.getState(chatId);
+        StateEnum state = stateService.getState(chatId);
         String answer = messageText;
         if (state == null){
-            startCommand.changeState(chatId);
+            stateService.updateState(chatId, WAITING_FOR_INPUT_NAME);
             answer = startCommand.getBotText();
             return answer;
         }
@@ -83,14 +85,14 @@ public class CommandManager {
     private String handleCommand(String command, long chatID) {
         switch (command) {
             case "/start" -> {
-                startCommand.changeState(chatID);
+                stateService.updateState(chatID, WAITING_FOR_INPUT_NAME);
                 return startCommand.getBotText();
             }
             case "/help" -> {
                 return helpCommand.getBotCommand();
             }
             case "/edit" -> {
-                editCommand.updateState(chatID);
+                stateService.updateState(chatID, StateEnum.WAITING_FOR_INPUT_EDIT_CONFIRMATION);
                 return editCommand.getBotText(chatID);
             }
             default -> {

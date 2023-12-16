@@ -18,7 +18,7 @@ public class User {
 
     private String institute;
 
-    private long phoneNumber;
+    private String phoneNumber;
 
     public User() {
     }
@@ -41,7 +41,7 @@ public class User {
      *
      * @return Номер телефона пользователя.
      */
-    public long getPhoneNumber() {
+    public String getPhoneNumber() {
         return phoneNumber;
     }
 
@@ -79,7 +79,7 @@ public class User {
         private String username;
         private long chatID;
         private String institute;
-        private long phoneNumber;
+        private String phoneNumber;
 
         public Builder(long chatID) {
             this.chatID = chatID;
@@ -92,7 +92,7 @@ public class User {
         }
 
 
-        public long getPhoneNumber() {
+        public String getPhoneNumber() {
             return phoneNumber;
         }
 
@@ -121,7 +121,7 @@ public class User {
          * @param phoneNumber номер телефона пользователя.
          * @return Builder
          */
-        public Builder phoneNumber(long phoneNumber) {
+        public Builder phoneNumber(String phoneNumber) {
             this.phoneNumber = phoneNumber;
             return this;
         }

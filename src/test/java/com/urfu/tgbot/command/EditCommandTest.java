@@ -1,6 +1,6 @@
 package com.urfu.tgbot.command;
 
-import com.urfu.tgbot.enums.State;
+import com.urfu.tgbot.enums.StateEnum;
 import com.urfu.tgbot.model.User;
 import com.urfu.tgbot.service.StateService;
 import com.urfu.tgbot.service.UserService;
@@ -31,8 +31,8 @@ public class EditCommandTest {
     @Test
     public void testUpdateState() {
         long chatID = 123456L;
-        editCommand.updateState(chatID);
-        verify(stateService).updateState(chatID, State.WAITING_FOR_INPUT_EDIT_CONFIRMATION);
+        //editCommand.updateState(chatID);
+        verify(stateService).updateState(chatID, StateEnum.WAITING_FOR_INPUT_EDIT_CONFIRMATION);
     }
 
     /**
@@ -67,7 +67,7 @@ public class EditCommandTest {
         String expectedResponse = "Введите новое ФИО";
         String actualResponse = editCommand.handleConfirmInput(input, chatID);
 
-        verify(stateService).updateState(chatID, State.WAITING_FOR_INPUT_NAME);
+        verify(stateService).updateState(chatID, StateEnum.WAITING_FOR_INPUT_NAME);
         assertEquals(expectedResponse, actualResponse);
     }
 
@@ -83,7 +83,7 @@ public class EditCommandTest {
         String expectedResponse = "Бот ожидает следующей команды";
         String actualResponse = editCommand.handleConfirmInput(input, chatID);
 
-        verify(stateService).updateState(chatID, State.WAITING_FOR_COMMAND);
+        verify(stateService).updateState(chatID, StateEnum.WAITING_FOR_COMMAND);
         assertEquals(expectedResponse, actualResponse);
     }
 }

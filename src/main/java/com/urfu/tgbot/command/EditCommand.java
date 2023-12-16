@@ -1,6 +1,6 @@
 package com.urfu.tgbot.command;
 
-import com.urfu.tgbot.enums.State;
+import com.urfu.tgbot.enums.StateEnum;
 import com.urfu.tgbot.service.StateService;
 import com.urfu.tgbot.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,15 +19,6 @@ public class EditCommand {
     public EditCommand(StateService stateService, UserService userService) {
         this.stateService = stateService;
         this.userService = userService;
-    }
-
-    /**
-     * Обновляет состояние чата на `WAITING_FOR_INPUT_EDIT_CONFIRMATION`.
-     *
-     * @param chatID Идентификатор чата пользователя.
-     */
-    public void updateState(long chatID) {
-        stateService.updateState(chatID, State.WAITING_FOR_INPUT_EDIT_CONFIRMATION);
     }
 
     /**
@@ -59,10 +50,10 @@ public class EditCommand {
             return exception.getMessage();
         }
         if (input.equals("Да")) {
-            stateService.updateState(chatID, State.WAITING_FOR_INPUT_NAME);
+            stateService.updateState(chatID, StateEnum.WAITING_FOR_INPUT_NAME);
             return "Введите новое ФИО";
         }
-        stateService.updateState(chatID, State.WAITING_FOR_COMMAND);
+        stateService.updateState(chatID, StateEnum.WAITING_FOR_COMMAND);
         return "Бот ожидает следующей команды";
     }
 }

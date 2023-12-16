@@ -1,6 +1,6 @@
 package com.urfu.tgbot.command;
 
-import com.urfu.tgbot.enums.State;
+import com.urfu.tgbot.enums.StateEnum;
 import com.urfu.tgbot.model.User;
 import com.urfu.tgbot.service.StateService;
 import com.urfu.tgbot.service.UserService;
@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
 /**
- * Этот класс реализует изменени профиля пользователя
+ * Этот класс реализует изменение профиля пользователя
  */
 @Controller
 public class NameEditor {
@@ -37,13 +37,8 @@ public class NameEditor {
         } catch (IllegalArgumentException exception) {
             return exception.getMessage();
         }
-        try {
-            userService.addUser(user);
-        } catch (Exception e) {
-            userService.deleteUser(user);
-            userService.addUser(user);
-        }
-        stateService.updateState(chatID, State.WAITING_FOR_INPUT_PHONE_NUMBER);
+        userService.changeUser(user);
+        stateService.updateState(chatID, StateEnum.WAITING_FOR_INPUT_PHONE_NUMBER);
         return "Введите номер телефона";
     }
 
@@ -68,9 +63,8 @@ public class NameEditor {
                 .phoneNumber(user.getPhoneNumber())
                 .institute(institute)
                 .build();
-        userService.deleteUser(newUser);
-        userService.addUser(newUser);
-        stateService.updateState(chatID, State.WAITING_FOR_COMMAND);
+        userService.changeUser(user);
+        stateService.updateState(chatID, StateEnum.WAITING_FOR_COMMAND);
         return "Вы успешно зарегистрировались. Ваш профиль:" + newUser.getFormattedString();
     }
 
@@ -93,11 +87,10 @@ public class NameEditor {
         User newUser = new User.Builder(chatID)
                 .username(user.getUsername())
                 .institute(user.getInstitute())
-                .phoneNumber(Long.parseLong(phoneNumber))
+                .phoneNumber(phoneNumber)
                 .build();
-        userService.deleteUser(newUser);
-        userService.addUser(newUser);
-        stateService.updateState(chatID, State.WAITING_FOR_INPUT_INSTITUTE);
+        userService.changeUser(newUser);
+        stateService.updateState(chatID, StateEnum.WAITING_FOR_INPUT_INSTITUTE);
         return "Введите ваш институт";
     }
 }
