@@ -32,6 +32,13 @@ public class User {
         this.chatID = chatID;
     }
 
+    public User(String username, long chatID, String institute, String phoneNumber) {
+        this.username = username;
+        this.chatID = chatID;
+        this.institute = institute;
+        this.phoneNumber = phoneNumber;
+    }
+
     public String getInstitute() {
         return institute;
     }
@@ -62,77 +69,26 @@ public class User {
         return username;
     }
 
-    /**
-     * Возвращает уникальный идентификатор пользователя.
-     *
-     * @return Уникальный идентификатор пользователя.
-     */
     public long getChatID() {
-        return this.chatID;
+        return chatID;
     }
 
-    /**
-     * Билдер для пользователя. Собирает пользователя по частям,
-     * по мере того как он вводит данные.
-     */
-    public static class Builder {
-        private String username;
-        private long chatID;
-        private String institute;
-        private String phoneNumber;
-
-        public Builder(long chatID) {
-            this.chatID = chatID;
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
         }
 
+        User user = (User) o;
 
-        public Builder chatID(long chatID) {
-            this.chatID = chatID;
-            return this;
-        }
+        return chatID == user.chatID;
+    }
 
-
-        public String getPhoneNumber() {
-            return phoneNumber;
-        }
-
-        /**
-         * Устанавливает имя пользователя.
-         * @param username имя пользователя
-         * @return Builder
-         */
-        public Builder username(String username) {
-            this.username = username;
-            return this;
-        }
-
-        /**
-         * Устанавливает институт пользователя.
-         * @param institute институт пользователя.
-         * @return Builder
-         */
-        public Builder institute(String institute) {
-            this.institute = institute;
-            return this;
-        }
-
-        /**
-         * Устанавливает номер телефона пользователя.
-         * @param phoneNumber номер телефона пользователя.
-         * @return Builder
-         */
-        public Builder phoneNumber(String phoneNumber) {
-            this.phoneNumber = phoneNumber;
-            return this;
-        }
-
-        public User build() {
-            User user = new User();
-            user.username = this.username;
-            user.chatID = this.chatID;
-            user.institute = this.institute;
-            user.phoneNumber = this.phoneNumber;
-            return user;
-        }
+    @Override
+    public int hashCode() {
+        return (int) (chatID ^ (chatID >>> 32));
     }
 }

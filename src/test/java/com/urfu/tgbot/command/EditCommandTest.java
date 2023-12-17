@@ -4,35 +4,35 @@ import com.urfu.tgbot.enums.StateEnum;
 import com.urfu.tgbot.model.User;
 import com.urfu.tgbot.service.StateService;
 import com.urfu.tgbot.service.UserService;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+import org.mockito.junit.MockitoJUnitRunner;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 /**
  * Модульные тесты для класса `Edit Command`.
  */
+@RunWith(MockitoJUnitRunner.class)
 public class EditCommandTest {
+    @Mock
     private StateService stateService;
+
+    @Mock
     private UserService userService;
+    @InjectMocks
     private EditCommand editCommand;
 
-    @BeforeEach
+    @Before
     public void setUp() {
-        stateService = mock(StateService.class);
-        userService = mock(UserService.class);
+        MockitoAnnotations.initMocks(this);
         editCommand = new EditCommand(stateService, userService);
-    }
-
-    /**
-     * Проверяет, что метод `updateState()` корректно обновляет состояние чата.
-     */
-    @Test
-    public void testUpdateState() {
-        long chatID = 123456L;
-        //editCommand.updateState(chatID);
-        verify(stateService).updateState(chatID, StateEnum.WAITING_FOR_INPUT_EDIT_CONFIRMATION);
     }
 
     /**
@@ -43,15 +43,13 @@ public class EditCommandTest {
         long chatID = 123456L;
         User user = new User(111);
         when(userService.getUserByChatID(chatID)).thenReturn(user);
-
         String expectedBotText = """
                 В данный момент ваш профиль выглядит так:
                 """ + user.getFormattedString() + """
-                 
+                                  
                  Вы уверены что хотите изменить его? 
                 (введите "Да" или "Нет")""";
         String actualBotText = editCommand.getBotText(chatID);
-
         assertEquals(expectedBotText, actualBotText);
     }
 
@@ -63,10 +61,8 @@ public class EditCommandTest {
     public void testHandleConfirmInputYes() {
         long chatID = 123456L;
         String input = "Да";
-
         String expectedResponse = "Введите новое ФИО";
         String actualResponse = editCommand.handleConfirmInput(input, chatID);
-
         verify(stateService).updateState(chatID, StateEnum.WAITING_FOR_INPUT_NAME);
         assertEquals(expectedResponse, actualResponse);
     }
@@ -79,10 +75,8 @@ public class EditCommandTest {
     public void testHandleConfirmInputNo() {
         long chatID = 123456L;
         String input = "Нет";
-
         String expectedResponse = "Бот ожидает следующей команды";
         String actualResponse = editCommand.handleConfirmInput(input, chatID);
-
         verify(stateService).updateState(chatID, StateEnum.WAITING_FOR_COMMAND);
         assertEquals(expectedResponse, actualResponse);
     }

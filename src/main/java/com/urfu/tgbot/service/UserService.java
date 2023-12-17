@@ -5,6 +5,8 @@ import com.urfu.tgbot.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 /**
  * Класс обслуживания для управления пользователями
  */
@@ -24,11 +26,14 @@ public class UserService {
      * @throws Exception Если пользователь уже существует.
      */
     public void addUser(User user) throws Exception {
-        User userFromDb = userRepository.findByUsername(user.getUsername());
-        if (userFromDb != null) {
-            throw new Exception("user exist");
+        Optional<User> userOptional = userRepository.findById(user.getChatID());
+        if (userOptional.isEmpty()) {
+            userRepository.save(user);
         }
-        userRepository.save(user);
+        else {
+            throw new Exception("user exists");
+        }
+
     }
 
     /**
@@ -36,11 +41,17 @@ public class UserService {
      *
      * @param user Пользователь для удаления.
      */
-    public void deleteUser(User user){
-        userRepository.delete(user);
+    public void deleteUser(User user) throws Exception {
+        Optional<User> userOptional = userRepository.findById(user.getChatID());
+        if (userOptional.isPresent()) {
+            userRepository.delete(userOptional.get());
+        }
+        else {
+            throw new Exception("User not exist");
+        }
     }
 
-    public void changeUser(User user) throws Exception{
+    public void changeUser(User user) throws Exception {
         deleteUser(user);
         addUser(user);
     }
@@ -52,6 +63,6 @@ public class UserService {
      * @return Пользователь с указанным идентификатором чата.
      */
     public User getUserByChatID(long chatID) {
-        return userRepository.findById(chatID).get();
+        return userRepository.findById(chatID).orElse(null);
     }
 }

@@ -5,12 +5,12 @@ import com.urfu.tgbot.model.User;
 import com.urfu.tgbot.service.StateService;
 import com.urfu.tgbot.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
+import org.springframework.stereotype.Component;
 
 /**
  * Этот класс реализует изменение профиля пользователя
  */
-@Controller
+@Component
 public class NameEditor {
     private final StateService stateService;
     private final UserService userService;
@@ -25,11 +25,11 @@ public class NameEditor {
      * Изменяет имя пользователя.
      *
      * @param chatID Идентификатор чата.
-     * @param name Имя пользователя.
+     * @param name   Имя пользователя.
      * @return Текст бота.
      * @throws Exception Если возникла ошибка при изменении имени пользователя.
      */
-    public String editName(long chatID, String name) throws Exception {
+    public String editName(long chatID, String name) {
         User user = new User(name, chatID);
         InputHandler inputHandler = new InputHandler();
         try {
@@ -37,7 +37,21 @@ public class NameEditor {
         } catch (IllegalArgumentException exception) {
             return exception.getMessage();
         }
-        userService.changeUser(user);
+        User oldUser = userService.getUserByChatID(chatID);
+        if (oldUser != null) {
+            try {
+                userService.changeUser(user);
+            } catch (Exception e) {
+                return "Не удалось установить имя";
+            }
+        }
+        else {
+            try {
+                userService.addUser(user);
+            } catch (Exception e) {
+                return "Не удалось установить имя";
+            }
+        }
         stateService.updateState(chatID, StateEnum.WAITING_FOR_INPUT_PHONE_NUMBER);
         return "Введите номер телефона";
     }
@@ -58,11 +72,7 @@ public class NameEditor {
             return exception.getMessage();
         }
         User user = userService.getUserByChatID(chatID);
-        User newUser = new User.Builder(chatID)
-                .username(user.getUsername())
-                .phoneNumber(user.getPhoneNumber())
-                .institute(institute)
-                .build();
+        User newUser = new User(user.getUsername(), chatID, user.getInstitute(), user.getPhoneNumber());
         userService.changeUser(user);
         stateService.updateState(chatID, StateEnum.WAITING_FOR_COMMAND);
         return "Вы успешно зарегистрировались. Ваш профиль:" + newUser.getFormattedString();
@@ -84,11 +94,7 @@ public class NameEditor {
             return exception.getMessage();
         }
         User user = userService.getUserByChatID(chatID);
-        User newUser = new User.Builder(chatID)
-                .username(user.getUsername())
-                .institute(user.getInstitute())
-                .phoneNumber(phoneNumber)
-                .build();
+        User newUser = new User(user.getUsername(), chatID, user.getInstitute(), phoneNumber);
         userService.changeUser(newUser);
         stateService.updateState(chatID, StateEnum.WAITING_FOR_INPUT_INSTITUTE);
         return "Введите ваш институт";
