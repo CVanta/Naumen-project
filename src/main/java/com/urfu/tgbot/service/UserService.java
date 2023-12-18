@@ -29,8 +29,7 @@ public class UserService {
         Optional<User> userOptional = userRepository.findById(user.getChatID());
         if (userOptional.isEmpty()) {
             userRepository.save(user);
-        }
-        else {
+        } else {
             throw new Exception("user exists");
         }
 
@@ -45,15 +44,22 @@ public class UserService {
         Optional<User> userOptional = userRepository.findById(user.getChatID());
         if (userOptional.isPresent()) {
             userRepository.delete(userOptional.get());
-        }
-        else {
+        } else {
             throw new Exception("User not exist");
         }
     }
 
-    public void changeUser(User user) throws Exception {
-        deleteUser(user);
-        addUser(user);
+    public void changeUser(User user) {
+        try {
+            deleteUser(user);
+        } catch (Exception exception) {
+            System.err.println(exception.getMessage());
+        }
+        try {
+            addUser(user);
+        } catch (Exception exception) {
+            System.err.println(exception.getMessage());
+        }
     }
 
     /**

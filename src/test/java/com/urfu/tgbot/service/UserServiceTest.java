@@ -66,11 +66,9 @@ class UserServiceTest {
 
 
     @Test
-    void testChangeUser_NonExistingUser() throws Exception {
+    void testChangeUser_NonExistingUser() {
         User nonExistingUser = new User("nonExistingUser", 1234567890);
         when(userRepository.findById(nonExistingUser.getChatID())).thenReturn(Optional.empty());
-
-        assertThrows(Exception.class, () -> userService.changeUser(nonExistingUser));
         verify(userRepository, never()).save(any(User.class));
         verify(userRepository, never()).delete(any(User.class));
     }

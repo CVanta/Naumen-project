@@ -47,29 +47,10 @@ public class CommandManager {
             return answer;
         }
         switch (state) {
-            case WAITING_FOR_INPUT_NAME -> {
-                try {
-                    answer = nameEditor.editName(chatId, messageText);
-                } catch (Exception e) {
-                    return "Вы не изменили имя";
-                }
-            }
-            case WAITING_FOR_INPUT_INSTITUTE -> {
-                try {
-                    answer = nameEditor.editInstitute(chatId, messageText);
-                } catch (Exception e) {
-                    return "Вы не изменили институт";
-                }
-            }
-            case WAITING_FOR_INPUT_PHONE_NUMBER -> {
-                try {
-                    answer = nameEditor.editPhoneNumber(chatId, messageText);
-                } catch (Exception e) {
-                    return "Вы не изменили номер телефона";
-                }
-            }
+            case WAITING_FOR_INPUT_NAME -> answer = nameEditor.editName(chatId, messageText);
+            case WAITING_FOR_INPUT_INSTITUTE -> answer = nameEditor.editInstitute(chatId, messageText);
+            case WAITING_FOR_INPUT_PHONE_NUMBER -> answer = nameEditor.editPhoneNumber(chatId, messageText);
             case WAITING_FOR_INPUT_EDIT_CONFIRMATION -> answer = editCommand.handleConfirmInput(messageText, chatId);
-
             case WAITING_FOR_COMMAND -> answer = handleCommand(messageText, chatId);
         }
         return answer;

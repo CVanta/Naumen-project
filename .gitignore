@@ -18,7 +18,7 @@ target/
 *.iml
 *.ipr
 
-application.properties
+src/test/resources/application.properties
 
 ### NetBeans ###
 /nbproject/private/
