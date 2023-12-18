@@ -1,4 +1,4 @@
-package com.urfu.tgbot.botLogic;
+package com.urfu.tgbot.telegramBot;
 
 import com.urfu.tgbot.command.CommandManager;
 import com.urfu.tgbot.config.BotConfig;
@@ -14,7 +14,7 @@ import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import org.telegram.telegrambots.updatesreceivers.DefaultBotSession;
 
 /**
- * Класс для реализации Telegram-бота
+ * Класс для получения сообщений от пользователя и отправки ответа, а так же для инициализации самого ТГ-бота.
  */
 @Component
 public class TelegramBot extends TelegramLongPollingBot {
@@ -60,8 +60,8 @@ public class TelegramBot extends TelegramLongPollingBot {
             String answer = commandManager.handleInputUpdateState(messageText, chatID);
             try {
                 sendMessage(chatID, answer);
-            } catch (TelegramApiException e) {
-                throw new RuntimeException(e);
+            } catch (TelegramApiException exception) {
+                System.err.println(exception);
             }
         }
     }
@@ -80,7 +80,7 @@ public class TelegramBot extends TelegramLongPollingBot {
 
             execute(message);
         } catch (TelegramApiException exception) {
-            throw new TelegramApiException("Не удалось отправить сообщение");
+            System.err.println(exception);
         }
     }
 
@@ -94,7 +94,7 @@ public class TelegramBot extends TelegramLongPollingBot {
         try {
             api.registerBot(this);
         } catch (TelegramApiException exception) {
-            throw new TelegramApiException("Не удалось инициализировать ТГ-бот.");
+            System.err.println("Не удалось инициализировать бота");
         }
     }
 }

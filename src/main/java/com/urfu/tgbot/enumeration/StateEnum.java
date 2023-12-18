@@ -1,4 +1,4 @@
-package com.urfu.tgbot.enums;
+package com.urfu.tgbot.enumeration;
 
 /**
  * Состояния тг_Бота.

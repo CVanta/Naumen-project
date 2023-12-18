@@ -1,6 +1,6 @@
 package com.urfu.tgbot.model;
 
-import com.urfu.tgbot.enums.StateEnum;
+import com.urfu.tgbot.enumeration.StateEnum;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;

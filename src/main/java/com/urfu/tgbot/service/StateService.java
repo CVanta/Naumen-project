@@ -1,6 +1,6 @@
 package com.urfu.tgbot.service;
 
-import com.urfu.tgbot.enums.StateEnum;
+import com.urfu.tgbot.enumeration.StateEnum;
 import com.urfu.tgbot.model.State;
 import com.urfu.tgbot.repository.StateRepository;
 import org.springframework.beans.factory.annotation.Autowired;
