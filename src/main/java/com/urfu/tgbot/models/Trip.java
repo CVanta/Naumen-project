@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.Timer;
 
 @Entity
 @Table(name = "trips")
@@ -19,14 +20,17 @@ public class Trip {
     private String timeTrip;
     private int freePlaces;
 
-    @ManyToMany(fetch = FetchType.EAGER, mappedBy = "tripList")
+    final @ManyToMany(fetch = FetchType.EAGER, mappedBy = "tripList")
     private List<User> passengers = new ArrayList<>();
+    private @OneToOne(fetch = FetchType.EAGER, mappedBy = "tripList")
+    Timer timerList;
 
-    public Trip(long driverID, String listPassenger, String destination, String timeTrip, int freePlaces) {
+    public Trip(long driverID, String destination, Timer timer, String timeTrip, int freePlaces, Timer timerList) {
         this.driverID = driverID;
         this.destination = destination;
         this.timeTrip = timeTrip;
         this.freePlaces = freePlaces;
+        this.timerList = timerList;
     }
 
 

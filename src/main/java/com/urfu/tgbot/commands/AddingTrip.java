@@ -1,21 +1,31 @@
 package com.urfu.tgbot.commands;
 
+import com.urfu.tgbot.botLogic.MessageSender;
 import com.urfu.tgbot.enums.States;
 import com.urfu.tgbot.models.Trip;
 import com.urfu.tgbot.services.StateService;
 import com.urfu.tgbot.services.TripService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Timer;
+import java.util.TimerTask;
 
 @Component
 public class AddingTrip {
-    private TripService tripService;
-    private StateService stateService;
+    private final TripService tripService;
+    private final StateService stateService;
+    private final MessageSender messageSender;
 
     @Autowired
-    private AddingTrip(TripService tripService, StateService stateService) {
+    private AddingTrip(TripService tripService, StateService stateService, @Lazy MessageSender messageSender) {
         this.tripService = tripService;
         this.stateService = stateService;
+        this.messageSender = messageSender;
     }
 
     /**
@@ -43,6 +53,7 @@ public class AddingTrip {
             tripService.deleteTrip(trip);
             tripService.addTrip(trip);
         }
+
         stateService.updateState(chatID, States.WAITING_FOR_INPUT_TIME);
         return "Напишите время и дату в формате DD-MM-YY HH:MM.";
     }
@@ -70,6 +81,7 @@ public class AddingTrip {
                 .build();
         tripService.deleteTrip(trip);
         tripService.addTrip(newTrip);
+        setTimerForTrip(time, chatID);
         stateService.updateState(chatID, States.WAITING_FOR_INPUT_PLACES);
         return "Введите количество свободных мест.";
     }
@@ -101,5 +113,24 @@ public class AddingTrip {
         tripService.addTrip(newTrip);
         stateService.updateState(chatID, States.WAITING_FOR_COMMAND);
         return "Ваша поездка добавлена в общий список. Для просмотра своих поездок введите /view.\n";
+    }
+
+    private void setTimerForTrip(String time, long chatID) {
+        // Расчет времени для запуска таймера (через час после указанного времени)
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-MM-yy HH:mm");
+        Date currentTime = new Date();
+        Timer timer = new Timer();
+        try {
+            Date specifiedTime = simpleDateFormat.parse(time);
+            Date timeOneHourLater = new Date(specifiedTime.getTime() + 10); // Добавление часа в миллисекундах
+            long delay = timeOneHourLater.getTime() - currentTime.getTime();
+            timer.schedule(new TimerTask() {
+                public void run() {
+                    messageSender.sendMessage(chatID, "aboba");
+                }
+            }, delay);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
     }
 }

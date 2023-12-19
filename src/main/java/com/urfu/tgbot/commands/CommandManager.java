@@ -3,9 +3,8 @@ package com.urfu.tgbot.commands;
 import com.urfu.tgbot.botLogic.Keyboard;
 import com.urfu.tgbot.enums.States;
 import com.urfu.tgbot.services.StateService;
-import org.checkerframework.checker.units.qual.K;
-import org.springframework.data.util.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.util.Pair;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
@@ -43,7 +42,7 @@ public class CommandManager {
 
     private final DelCommand delCommand;
 
-    private final ReplyKeyboardMarkup emptyKeyboard = null;
+    private final ReplyKeyboardMarkup emptyKeyboard = new ReplyKeyboardMarkup();
 
     private final CsvCommand csvCommand;
 

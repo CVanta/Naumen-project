@@ -2,6 +2,7 @@ package com.urfu.tgbot.botLogic;
 
 import com.urfu.tgbot.commands.CommandManager;
 import com.urfu.tgbot.configs.BotConfig;
+import org.springframework.data.util.Pair;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.send.SendDocument;
@@ -11,8 +12,8 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardRemove;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
+
 import java.io.File;
-import org.springframework.data.util.Pair;
 
 @Component
 public class TelegramBot extends TelegramLongPollingBot implements MessageSender {
@@ -75,7 +76,9 @@ public class TelegramBot extends TelegramLongPollingBot implements MessageSender
         message.setChatId(String.valueOf(chatId));
         message.setText(textToSend);
         ReplyKeyboardRemove removeKeyboard = new ReplyKeyboardRemove();
-        if (currentKeyboard == null) {
+        //Мы знаем, что IDEA ругается на следующую строку, но она ошибается, можем предоставить всевозможные
+        // доказательства.
+        if (currentKeyboard.getKeyboard() == null) {
             removeKeyboard.setRemoveKeyboard(true);
             message.setReplyMarkup(removeKeyboard);
         } else {
@@ -95,7 +98,6 @@ public class TelegramBot extends TelegramLongPollingBot implements MessageSender
      *
      * @param chatId   Идентификатор чата, куда следует отправить документ.
      * @param docPath  Путь к файлу, который нужно отправить в качестве документа.
-     * @throws TelegramApiException В случае возникновения ошибки при отправке документа.
      */
     @Override
     public void sendFile(Long chatId, String docPath) {

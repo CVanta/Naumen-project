@@ -2,10 +2,10 @@ package com.urfu.tgbot.services;
 
 import com.urfu.tgbot.models.Trip;
 import com.urfu.tgbot.models.User;
+import com.urfu.tgbot.repositories.TripRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
-import com.urfu.tgbot.repositories.TripRepository;
 
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -73,7 +73,7 @@ public class TripService {
      * @param driverID, listPassenger, destination Поездка для добавления.
      */
     public Trip saveTrip(long driverID, String listPassenger, String destination, String timeTrip, int freePlaces) {
-        Trip trip = new Trip(driverID, listPassenger, destination, timeTrip, freePlaces);
+        Trip trip = new Trip(driverID, listPassenger, destination, timeTrip, freePlaces, timerList);
         tripRepository.save(trip);
         return trip;
     }
