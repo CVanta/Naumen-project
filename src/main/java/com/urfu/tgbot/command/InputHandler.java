@@ -53,7 +53,7 @@ public class InputHandler {
             throw new IllegalArgumentException("Введенное значение не может быть пустым");
         }
         if (input.length() > 10) {
-            throw new IllegalArgumentException("Введите название института абревиатурой");
+            throw new IllegalArgumentException("Введите название института аббревиатурой");
         }
         String regex = "^[А-Яа-яЁё]+(?:\\s[А-Яа-яЁё]+)?$";
         if (!input.matches(regex)) {

@@ -17,6 +17,7 @@ class StateServiceTest {
 
     private StateService stateService;
     private StateRepository stateRepository;
+    private final long chatId = 1234567890;
 
     @BeforeEach
     void setUp() {
@@ -29,7 +30,6 @@ class StateServiceTest {
      */
     @Test
     void testUpdateStateNewState() {
-        long chatId = 1234567890;
         StateEnum newState = StateEnum.WAITING_FOR_INPUT_NAME;
         State newStateUser = new State(chatId, newState);
         when(stateRepository.findById(chatId)).thenReturn(Optional.empty());
@@ -44,7 +44,6 @@ class StateServiceTest {
      */
     @Test
     void testUpdateState_ExistingState() {
-        long chatId = 1234567890;
         StateEnum newState = StateEnum.WAITING_FOR_INPUT_INSTITUTE;
         State existingState = new State(chatId, StateEnum.WAITING_FOR_INPUT_NAME);
         when(stateRepository.findById(chatId)).thenReturn(Optional.of(existingState));
@@ -56,11 +55,10 @@ class StateServiceTest {
 
 
     /**
-     * Тест для метода getState, который проверяет получение текущего состояния, когда состояние уже существует.
+     * Тест для метода getState, который проверяет получение текущего состояния, когда состояние существует.
      */
     @Test
     void testGetState_ExistingState() {
-        long chatId = 1234567890;
         StateEnum expectedState = StateEnum.WAITING_FOR_INPUT_NAME;
         State existingState = new State(chatId, expectedState);
         when(stateRepository.findById(chatId)).thenReturn(Optional.of(existingState));
@@ -70,11 +68,11 @@ class StateServiceTest {
 
 
     /**
-     * Тест для метода getState, который проверяет получение текущего состояния, когда состояния не существует.
+     * Тест для метода getState, который проверяет получение текущего состояния, когда указанного chatId
+     * нет в репозитории, ожидается получение null.
      */
     @Test
     void testGetState_NonExistingState() {
-        long chatId = 1234567890;
         when(stateRepository.findById(chatId)).thenReturn(Optional.empty());
         StateEnum currentState = stateService.getState(chatId);
         assertNull(currentState);
