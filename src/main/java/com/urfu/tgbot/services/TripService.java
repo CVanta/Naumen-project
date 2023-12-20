@@ -72,11 +72,11 @@ public class TripService {
      *
      * @param driverID, listPassenger, destination Поездка для добавления.
      */
-    public Trip saveTrip(long driverID, String listPassenger, String destination, String timeTrip, int freePlaces) {
-        Trip trip = new Trip(driverID, listPassenger, destination, timeTrip, freePlaces, timerList);
-        tripRepository.save(trip);
-        return trip;
-    }
+//    public Trip saveTrip(long driverID, String listPassenger, String destination, String timeTrip, int freePlaces) {
+//        Trip trip = new Trip(driverID, listPassenger, destination, timeTrip, freePlaces);
+//        tripRepository.save(trip);
+//        return trip;
+//    }
 
     /**
      * Добавляет поездку в базу данных.

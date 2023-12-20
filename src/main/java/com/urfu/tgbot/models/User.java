@@ -1,5 +1,6 @@
 package com.urfu.tgbot.models;
 
+import com.urfu.tgbot.enums.Role;
 import jakarta.persistence.*;
 
 import java.util.ArrayList;
@@ -14,7 +15,7 @@ public class User {
 
     private String tgUsername;
 
-    private boolean isActive;
+    private Role role;
 
     @Id
     private long chatID;
@@ -44,7 +45,7 @@ public class User {
      */
     public static class Builder {
         private String username;
-        private long chatID;
+        private final long chatID;
         private String institute;
         private long phoneNumber;
 
@@ -154,8 +155,8 @@ public class User {
      *
      * @param active True- пользователь активен, False - пользователь не активен
      */
-    public void setActive(boolean active) {
-        this.isActive = active;
+    public Role getRole() {
+        return this.role;
     }
 
 

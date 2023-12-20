@@ -9,12 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Timer;
-import java.util.TimerTask;
-
 @Component
 public class AddingTrip {
     private final TripService tripService;
@@ -81,7 +75,6 @@ public class AddingTrip {
                 .build();
         tripService.deleteTrip(trip);
         tripService.addTrip(newTrip);
-        setTimerForTrip(time, chatID);
         stateService.updateState(chatID, States.WAITING_FOR_INPUT_PLACES);
         return "Введите количество свободных мест.";
     }
@@ -115,22 +108,22 @@ public class AddingTrip {
         return "Ваша поездка добавлена в общий список. Для просмотра своих поездок введите /view.\n";
     }
 
-    private void setTimerForTrip(String time, long chatID) {
-        // Расчет времени для запуска таймера (через час после указанного времени)
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-MM-yy HH:mm");
-        Date currentTime = new Date();
-        Timer timer = new Timer();
-        try {
-            Date specifiedTime = simpleDateFormat.parse(time);
-            Date timeOneHourLater = new Date(specifiedTime.getTime() + 10); // Добавление часа в миллисекундах
-            long delay = timeOneHourLater.getTime() - currentTime.getTime();
-            timer.schedule(new TimerTask() {
-                public void run() {
-                    messageSender.sendMessage(chatID, "aboba");
-                }
-            }, delay);
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-    }
+//    private void setTimerForTrip(String time, long chatID) {
+//        // Расчет времени для запуска таймера (через час после указанного времени)
+//        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-MM-yy HH:mm");
+//        Date currentTime = new Date();
+//        Timer timer = new Timer();
+//        try {
+//            Date specifiedTime = simpleDateFormat.parse(time);
+//            Date timeOneHourLater = new Date(specifiedTime.getTime() + 10); // Добавление часа в миллисекундах
+//            long delay = timeOneHourLater.getTime() - currentTime.getTime();
+//            timer.schedule(new TimerTask() {
+//                public void run() {
+//                    messageSender.sendMessage(chatID, "aboba");
+//                }
+//            }, delay);
+//        } catch (ParseException e) {
+//            e.printStackTrace();
+//        }
+//    }
 }

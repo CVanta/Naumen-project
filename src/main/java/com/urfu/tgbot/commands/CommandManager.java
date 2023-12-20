@@ -1,8 +1,10 @@
 package com.urfu.tgbot.commands;
 
 import com.urfu.tgbot.botLogic.Keyboard;
+import com.urfu.tgbot.enums.Role;
 import com.urfu.tgbot.enums.States;
 import com.urfu.tgbot.services.StateService;
+import com.urfu.tgbot.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.util.Pair;
 import org.springframework.stereotype.Component;
@@ -46,12 +48,15 @@ public class CommandManager {
 
     private final CsvCommand csvCommand;
 
+    private final UserService userService;
+
     @Autowired
     public CommandManager(StartCommand startCommand, HelpCommand helpCommand, ListCommand listCommand,
                           StateService stateService, AddNewUser addNewUser, EditCommand editCommand,
                           AddCommand addCommand, AddingTrip addingTrip, SignUpCommand signUpCommand,
                           ProfileCommand profileCommand, ViewCommand viewCommand, ShowCommand showCommand,
-                          DelTripCommand delTripCommand, DelCommand delCommand, CsvCommand csvCommand) {
+                          DelTripCommand delTripCommand, DelCommand delCommand, CsvCommand csvCommand,
+                          UserService userService) {
         this.startCommand = startCommand;
         this.helpCommand = helpCommand;
         this.listCommand = listCommand;
@@ -67,19 +72,19 @@ public class CommandManager {
         this.delTripCommand = delTripCommand;
         this.delCommand = delCommand;
         this.csvCommand = csvCommand;
+        this.userService = userService;
     }
 
 
     public Pair<String, ReplyKeyboardMarkup> readInput(String messageText, long chatId, String username) {
         States state = stateService.getState(chatId);
         String answer = messageText;
-        Keyboard keyboard =  new Keyboard();
-        if (state == null){
+        Keyboard keyboard = new Keyboard();
+        if (state == null) {
             startCommand.changeState(chatId);
             String answerText = startCommand.getBotText();
             return Pair.of(answerText, emptyKeyboard);
-        }
-        else{
+        } else {
             switch (state) {
                 case WAITING_FOR_INPUT_NAME -> {
                     try {
@@ -87,12 +92,16 @@ public class CommandManager {
                     } catch (Exception e) {
                         return Pair.of("Вы не изменили имя", emptyKeyboard);
                     }
+                    return Pair.of(answer, emptyKeyboard);
                 }
                 case WAITING_FOR_INPUT_INSTITUTE -> {
                     try {
                         answer = addNewUser.editInstitute(chatId, messageText);
                     } catch (Exception e) {
                         return Pair.of("Вы не изменили институт", emptyKeyboard);
+                    }
+                    if (stateService.getState(chatId) == States.WAITING_FOR_INPUT_INSTITUTE) {
+                        return Pair.of(answer, emptyKeyboard);
                     }
                 }
                 case WAITING_FOR_INPUT_PHONE_NUMBER -> {
@@ -101,10 +110,11 @@ public class CommandManager {
                     } catch (Exception e) {
                         return Pair.of("Вы не изменили номер телефона", emptyKeyboard);
                     }
+                    return Pair.of(answer, emptyKeyboard);
                 }
                 case WAITING_FOR_INPUT_TIME -> {
                     answer = addingTrip.addTimeTrip(chatId, messageText);
-                    if (stateService.getState(chatId) == States.WAITING_FOR_INPUT_TIME){
+                    if (stateService.getState(chatId) == States.WAITING_FOR_INPUT_TIME) {
                         return Pair.of(answer, emptyKeyboard);
                     }
                     return Pair.of(answer, keyboard.getNumbers1to9Keyboard());
@@ -140,9 +150,9 @@ public class CommandManager {
                 }
                 case WAITING_FOR_INPUT_EDIT_CONFIRMATION -> {
                     answer = editCommand.handleConfirmInput(messageText, chatId);
-                    if(stateService.getState(chatId) ==  States.WAITING_FOR_INPUT_EDIT_CONFIRMATION)
+                    if (stateService.getState(chatId) == States.WAITING_FOR_INPUT_EDIT_CONFIRMATION)
                         return Pair.of(answer, keyboard.getYesNoKeyboard());
-                    if (stateService.getState(chatId) ==  States.WAITING_FOR_INPUT_NAME)
+                    if (stateService.getState(chatId) == States.WAITING_FOR_INPUT_NAME)
                         return Pair.of(answer, emptyKeyboard);
                     return Pair.of(answer, keyboard.getDefaultCommandKeyboard());
                 }
@@ -161,7 +171,7 @@ public class CommandManager {
                         showCommand.changeState(chatId);
                         return Pair.of(showCommand.getBotText(chatId, number), keyboard.getDefaultCommandKeyboard());
                     }
-                    if(messageText.startsWith("/del")){
+                    if (messageText.startsWith("/del")) {
                         int number;
                         try {
                             number = Integer.parseInt(messageText.split(" ")[1]);
@@ -170,9 +180,7 @@ public class CommandManager {
                         }
                         delTripCommand.changeState(chatId);
                         return Pair.of(delTripCommand.delTrip(chatId, number), keyboard.getDefaultCommandKeyboard());
-                    }
-                    else
-                    {
+                    } else {
                         return Pair.of("Введенное сообщение не соответствует формату ввода", viewCommand.getViewKeyboard(chatId));
                     }
                 }
@@ -201,7 +209,7 @@ public class CommandManager {
 
 
     public Pair<String, ReplyKeyboardMarkup> readCommand(String command, long chatID, String username) {
-        Keyboard keyboard =  new Keyboard();
+        Keyboard keyboard = new Keyboard();
         command = command.split(" ")[0];
         switch (command) {
             case "/start" -> {
@@ -229,9 +237,12 @@ public class CommandManager {
                 profileCommand.changeState(chatID);
                 return Pair.of(profileCommand.viewTrips(chatID), delCommand.getDelKeyboard(chatID));
             }
-            case "/csv" ->{
-                csvCommand.generateAndSendCsv(chatID);
-                return Pair.of("", keyboard.getDefaultCommandKeyboard());
+            case "/csv" -> {
+                if (userService.getUserByChatID(chatID).getRole() == Role.ADMIN) {
+                    csvCommand.generateAndSendCsv(chatID);
+                    return Pair.of("", keyboard.getDefaultCommandKeyboard());
+                }
+                return Pair.of("Вам недоступна эта команда", keyboard.getDefaultCommandKeyboard());
             }
             case "/view" -> {
                 viewCommand.changeState(chatID);
@@ -241,7 +252,7 @@ public class CommandManager {
             default -> {
                 ReplyKeyboardMarkup replyKeyboardMarkup = keyboard.getDefaultCommandKeyboard();
                 String answer = "Не удалось распознать команду";
-                return  Pair.of(answer, replyKeyboardMarkup);
+                return Pair.of(answer, replyKeyboardMarkup);
             }
         }
     }
