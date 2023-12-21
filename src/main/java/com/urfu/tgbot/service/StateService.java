@@ -28,13 +28,7 @@ public class StateService {
      */
     public void updateState(Long chatID, StateEnum state) {
         State newState = new State(chatID, state);
-        if(stateRepository.findById(chatID).isEmpty()){
-            stateRepository.save(newState);
-        }
-        else {
-            stateRepository.deleteById(chatID);
-            stateRepository.save(newState);
-        }
+        stateRepository.save(newState);
     }
 
     /**
