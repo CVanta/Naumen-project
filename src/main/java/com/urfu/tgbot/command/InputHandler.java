@@ -58,7 +58,7 @@ public class InputHandler {
             throw new IllegalArgumentException("Введенное значение не может быть пустым");
         }
         if (input.length() > 10) {
-            throw new IllegalArgumentException("Не бывает таких длинных институтов");
+            throw new IllegalArgumentException("Введите название института аббревиатурой");
         }
         String regex = "^(?:[А-Яа-яЁё]+(?:\\s[А-Яа-яЁё]+)?)$";
         if (!input.matches(regex)) {
@@ -95,7 +95,7 @@ public class InputHandler {
             throw new IllegalArgumentException("Неверный формат даты и времени");
         }
         if (currentDate.after(date)) {
-            throw new IllegalArgumentException("Путешествия во времени запрещены");
+            throw new IllegalArgumentException("Невозможно создать поездку в прошлом");
         }
     }
 
@@ -110,8 +110,8 @@ public class InputHandler {
     public void checkPlaces(String numberString) throws IllegalArgumentException, NumberFormatException {
         try {
             int number = Integer.parseInt(numberString);
-            if (number >= 10) {
-                throw new IllegalArgumentException("Число должно быть меньше 10");
+            if (number >= 10 || number < 1) {
+                throw new IllegalArgumentException("Число должно быть меньше 10 и больше ноля");
             }
         } catch (NumberFormatException e) {
             throw new NumberFormatException("Невозможно преобразовать в число");

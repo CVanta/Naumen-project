@@ -40,10 +40,6 @@ public class DelCommand {
         Trip trip = user.getTripList().get(tripNumber - 1);
         trip.incrementFreePlaces();
         tripService.addTrip(trip);
-        try{
-            userService.deleteUser(user);
-        }
-        catch (Exception e) {return "Не удалось удалить поездку.";}
         user.removeTrip(trip);
         userService.addUser(user);
 

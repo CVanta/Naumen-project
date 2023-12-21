@@ -66,9 +66,7 @@ public class CommandManager {
                 case WAITING_FOR_INPUT_INSTITUTE -> answer = nameEditor.editInstitute(chatId, messageText);
                 case WAITING_FOR_INPUT_PHONE_NUMBER -> answer = nameEditor.editPhoneNumber(chatId, messageText);
                 case WAITING_FOR_INPUT_TIME -> answer = addingTrip.addTimeTrip(chatId, messageText);
-
                 case WAITING_FOR_INPUT_PLACES -> answer = addingTrip.addPlacesTrip(chatId, messageText);
-
                 case WAITING_FOR_INPUT_DESTINATION -> answer = addingTrip.addDriverDestinationTrip(chatId, messageText);
                 case WAITING_FOR_INPUT_TRIP_NUMBER -> {
                     if (messageText.startsWith("0")) {

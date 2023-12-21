@@ -40,17 +40,10 @@ public class DelTripCommand {
         catch (Exception e){
             return e.getMessage();
         }
-        while (trip.getPassengers() != null && trip.getPassengers().size() > 0) {
+        while (trip.getPassengers() != null && !trip.getPassengers().isEmpty()) {
             User passenger = trip.getPassengers().get(0);
-            try {
-                userService.deleteUser(passenger);
-            }
-            catch (Exception e){
-                return "Не удалось удалить поездку";
-            }
             passenger.removeTrip(trip);
             userService.addUser(passenger);
-
         }
         tripService.deleteTrip(trip);
         return "Поездка успешно удалена.";

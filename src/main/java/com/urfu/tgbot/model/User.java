@@ -44,6 +44,14 @@ public class User {
         this.institute = institute;
         this.phoneNumber = phoneNumber;
     }
+
+    public User(String username, String tgUsername, long chatID, String phoneNumber) {
+        this.username = username;
+        this.tgUsername = tgUsername;
+        this.chatID = chatID;
+        this.phoneNumber = phoneNumber;
+    }
+
     public User(String username, long chatID, String tgUsername) {
         this.username = username;
         this.chatID = chatID;

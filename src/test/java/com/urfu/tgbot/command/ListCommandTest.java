@@ -1,51 +1,43 @@
-//package com.urfu.tgbot.command;
-//
-//import com.urfu.tgbot.enumeration.StateEnum;
-//import com.urfu.tgbot.model.Trip;
-//import com.urfu.tgbot.service.StateService;
-//import com.urfu.tgbot.service.TripService;
-//import org.junit.Test;
-//import org.junit.runner.RunWith;
-//import org.mockito.InjectMocks;
-//import org.mockito.Mock;
-//import org.mockito.junit.MockitoJUnitRunner;
-//
-//import java.util.ArrayList;
-//import java.util.List;
-//
-//import static org.junit.Assert.assertEquals;
-//import static org.mockito.Mockito.verify;
-//import static org.mockito.Mockito.when;
-//
-//@RunWith(MockitoJUnitRunner.class)
-//public class ListCommandTest {
-//
-//    @Mock
-//    private TripService tripService;
-//
-//    @Mock
-//    private StateService stateService;
-//
-//    @InjectMocks
-//    private ListCommand listCommand;
-//
-//    @Test
-//    public void testGetAllAvailableTrips() {
-//        List<Trip> fakeTrips = new ArrayList<>();
-//        Trip trip1 = new Trip.TripBuilder().destination("Абоба").timeTrip("22-01-24 15:15").freePlaces(5).build();
-//        Trip trip2 = new Trip.TripBuilder().destination("Радиофак").timeTrip("21-01-26 23:15").freePlaces(3).build();
-//        fakeTrips.add(trip1);
-//        fakeTrips.add(trip2);
-//        when(tripService.getAvailableTrips()).thenReturn(fakeTrips);
-//        String expectedText = "1. 22-01-24 15:15 Абоба мест:5\n2. 21-01-26 23:15 Радиофак мест:3\n0 - для выхода в режим комманд";
-//        String result = listCommand.getAllAvailableTrips();
-//        assertEquals(expectedText, result);
-//    }
-//
-//    @Test
-//    public void testChangeState() {
-//        long chatID = 123456L;
-//        listCommand.changeState(chatID);
-//        verify(stateService).updateState(chatID, StateEnum.WAITING_FOR_INPUT_TRIP_NUMBER);
-//    }
-//}
+package com.urfu.tgbot.command;
+
+import com.urfu.tgbot.model.Trip;
+import com.urfu.tgbot.service.TripService;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.when;
+
+@ExtendWith(MockitoExtension.class)
+public class ListCommandTest {
+
+    @Mock
+    private TripService tripService;
+
+    @InjectMocks
+    private ListCommand listCommand;
+
+    /**
+     * Проверяет, что метод getAllAvailableTrips возвращает корректный текст со списком доступных поездок.
+     */
+
+    @Test
+    public void testListCommand() {
+        List<Trip> fakeTrips = new ArrayList<>();
+        fakeTrips.add(new Trip(111, "Абоба", "22-01-24 15:15", 5));
+        fakeTrips.add(new Trip(111, "Радиофак", "21-01-26 23:15", 3));
+        when(tripService.getAvailableTrips()).thenReturn(fakeTrips);
+        String expectedText = """
+                1. 22-01-24 15:15 Абоба мест:5
+                2. 21-01-26 23:15 Радиофак мест:3
+                0 - для выхода в режим комманд""";
+        String result = listCommand.getAllAvailableTrips();
+        assertEquals(expectedText, result);
+    }
+}

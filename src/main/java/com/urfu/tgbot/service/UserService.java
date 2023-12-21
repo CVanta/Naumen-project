@@ -16,7 +16,7 @@ public class UserService {
     private final UserRepository userRepository;
 
     @Autowired
-    public UserService(UserRepository userRepository, Trip trip) {
+    public UserService(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
 
@@ -40,6 +40,19 @@ public class UserService {
             userRepository.delete(userOptional.get());
         } else {
             throw new Exception("User not exist");
+        }
+    }
+
+    public void changeUser(User user) {
+        try {
+            deleteUser(user);
+        } catch (Exception exception) {
+            System.err.println(exception.getMessage());
+        }
+        try {
+            addUser(user);
+        } catch (Exception exception) {
+            System.err.println(exception.getMessage());
         }
     }
 
