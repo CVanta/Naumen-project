@@ -2,9 +2,10 @@ package com.urfu.tgbot.service;
 
 import com.urfu.tgbot.model.Trip;
 import com.urfu.tgbot.model.User;
+import com.urfu.tgbot.repository.TripRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import com.urfu.tgbot.repository.TripRepository;
+
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -82,7 +83,7 @@ public class TripService {
      * Получает все поездки для конкретного идентификатора чата.
      *
      * @param chatID Идентификатор чата.
-     * @return Список поездок по заданному chatID.
+     * @return Список поездок по-заданному chatID.
      */
     public List<Trip> getAllTripsByChatId(long chatID){
         Iterable<Trip> iterable = () -> tripRepository.findAll().iterator();
@@ -94,7 +95,7 @@ public class TripService {
      * Получает последнюю поездку для конкретного идентификатора чата.
      *
      * @param chatID Идентификатор чата.
-     * @return Поездка по заданному chatID.
+     * @return Поездка по-заданному chatID.
      */
     public Trip getLastTripChatID(long chatID) throws Exception {
         Iterable<Trip> iterable = () -> tripRepository.findAll().iterator();
@@ -113,7 +114,6 @@ public class TripService {
      * @param user Пользователь.
      */
     public void addUserToTrip(Trip trip, User user) {
-        trip.addPassenger(user);
         trip.decrementFreePlaces();
         user.addTrip(trip);
         addTrip(trip);

@@ -28,7 +28,6 @@ public class ListCommand {
      */
     public String getAllAvailableTrips() {
         List<Trip> trips = tripService.getAvailableTrips();
-
         StringBuilder result = new StringBuilder();
         int num = 1;
         for (Trip trip : trips) {

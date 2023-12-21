@@ -39,7 +39,7 @@ public class ProfileCommand {
         }
         int cnt = 1;
         StringBuilder result = new StringBuilder();
-        result.append("Поездки, на которые вы записались \n");
+        result.append("Поездки, на которые вы записались\n");
         for (Trip trip : trips) {
             result
                     .append(cnt)
