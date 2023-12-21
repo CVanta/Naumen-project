@@ -72,4 +72,5 @@ class UserServiceTest {
         when(userRepository.findById(nonExistingChatID)).thenReturn(Optional.empty());
         assertNull(userService.getUserByChatID(nonExistingChatID));
     }
+<<<<<<< HEAD
 }

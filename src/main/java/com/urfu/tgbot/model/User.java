@@ -156,4 +156,5 @@ public class User {
     public int hashCode() {
         return (int) (chatID ^ (chatID >>> 32));
     }
+<<<<<<< HEAD
 }
