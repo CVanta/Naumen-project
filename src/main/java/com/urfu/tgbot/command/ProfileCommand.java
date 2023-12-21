@@ -10,6 +10,9 @@ import org.springframework.stereotype.Component;
 
 import java.util.List;
 
+/**
+ * Класс предоставляет обработку команды /profile
+ */
 @Component
 public class ProfileCommand {
 

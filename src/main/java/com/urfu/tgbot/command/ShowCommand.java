@@ -7,6 +7,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+/**
+ * Класс предоставляет обработку команды /show
+ */
 @Component
 public class ShowCommand {
     private final TripService tripService;

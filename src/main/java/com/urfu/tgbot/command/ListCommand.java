@@ -7,6 +7,9 @@ import org.springframework.stereotype.Component;
 
 import java.util.List;
 
+/**
+ * Класс предоставляет обработку команды /list
+ */
 @Component
 public class ListCommand {
 

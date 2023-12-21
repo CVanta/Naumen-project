@@ -9,6 +9,9 @@ import org.springframework.stereotype.Component;
 
 import java.util.List;
 
+/**
+ * Класс для обработки команды удаление поездки
+ */
 @Component
 public class DelTripCommand {
     private final TripService tripService;
@@ -46,12 +49,8 @@ public class DelTripCommand {
                 return "Не удалось удалить поездку";
             }
             passenger.removeTrip(trip);
-            try {
-                userService.addUser(passenger);
-            }
-            catch (Exception e){
-                return "Не удалось удалить поездку";
-            }
+            userService.addUser(passenger);
+
         }
         tripService.deleteTrip(trip);
         return "Поездка успешно удалена.";

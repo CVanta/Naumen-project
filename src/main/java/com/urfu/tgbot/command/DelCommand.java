@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
- * Класс для обработки команды удаление поездки
+ * Класс для обработки команды отмена записи на поездку
  */
 @Component
 public class DelCommand {
@@ -45,10 +45,7 @@ public class DelCommand {
         }
         catch (Exception e) {return "Не удалось удалить поездку.";}
         user.removeTrip(trip);
-        try{
-            userService.addUser(user);
-        }
-        catch (Exception e) {return "Не удалось удалить поездку.";}
+        userService.addUser(user);
 
         return "Ваша запись на поездку успешно удалена.";
     }

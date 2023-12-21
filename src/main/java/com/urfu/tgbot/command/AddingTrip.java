@@ -7,6 +7,9 @@ import com.urfu.tgbot.service.TripService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+/**
+ * Класс для обработки команды добавление поездки
+ */
 @Component
 public class AddingTrip {
     private final TripService tripService;
@@ -36,12 +39,7 @@ public class AddingTrip {
             return exception.getMessage();
         }
         Trip trip = new Trip(chatID, destination);
-        try {
-            tripService.addTrip(trip);
-        } catch (Exception e) {
-            tripService.deleteTrip(trip);
-            tripService.addTrip(trip);
-        }
+        tripService.addTrip(trip);
         stateService.updateState(chatID, StateEnum.WAITING_FOR_INPUT_TIME);
         return "Напишите время и дату в формате DD-MM-YY HH:MM.";
     }
@@ -61,12 +59,16 @@ public class AddingTrip {
         } catch (IllegalArgumentException exception) {
             return exception.getMessage();
         }
-        Trip trip = tripService.getLastTripChatID(chatID);
-        Trip newTrip = new Trip(chatID, trip.getDestination(), time);
-        tripService.deleteTrip(trip);
-        tripService.addTrip(newTrip);
-        stateService.updateState(chatID, StateEnum.WAITING_FOR_INPUT_PLACES);
-        return "Введите количество свободных мест.";
+        try {
+            Trip trip = tripService.getLastTripChatID(chatID);
+            Trip newTrip = new Trip(chatID, trip.getDestination(), time);
+            tripService.addTrip(newTrip);
+            stateService.updateState(chatID, StateEnum.WAITING_FOR_INPUT_PLACES);
+            return "Введите количество свободных мест.";
+        }
+        catch (Exception e) {
+            return "Не удалось добавить дату и время";
+        }
     }
 
     /**
@@ -85,11 +87,15 @@ public class AddingTrip {
         catch (IllegalArgumentException exception){
             return exception.getMessage();
         }
-        Trip trip = tripService.getLastTripChatID(chatID);
-        Trip newTrip = new Trip(chatID, trip.getDestination(),trip.getTimeTrip(), Integer.parseInt(places));
-        tripService.deleteTrip(trip);
-        tripService.addTrip(newTrip);
-        stateService.updateState(chatID, StateEnum.WAITING_FOR_COMMAND);
-        return "Ваша поездка добавлена в общий список. Для просмотра своих поездок введите /view.\n";
+        try {
+            Trip trip = tripService.getLastTripChatID(chatID);
+            Trip newTrip = new Trip(chatID, trip.getDestination(),trip.getTimeTrip(), Integer.parseInt(places));
+            tripService.addTrip(newTrip);
+            stateService.updateState(chatID, StateEnum.WAITING_FOR_COMMAND);
+            return "Ваша поездка добавлена в общий список. Для просмотра своих поездок введите /view.\n";
+        }
+        catch (Exception e){
+            return "Не удалось добавить колличество свободных мест";
+        }
     }
 }

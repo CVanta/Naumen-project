@@ -11,6 +11,9 @@ import org.springframework.stereotype.Component;
 
 import java.util.List;
 
+/**
+ * Класс предоставляет обработку команды /SignUp
+ */
 @Component
 public class SignUpCommand {
     private final StateService stateService;
@@ -48,7 +51,12 @@ public class SignUpCommand {
             return "Вы не можете записаться на поездку дважды!";
         }
         tripService.addUserToTrip(trip, user);
-        userService.addTripToUser(trip, user);
+        try {
+            userService.addTripToUser(trip, user);
+        }
+        catch (Exception e){
+            return "Не удалось записаться на поездку";
+        }
         stateService.updateState(chatID, StateEnum.WAITING_FOR_COMMAND);
         return "Вы записались на поездку: " + trip.getFormattedString();
     }

@@ -165,7 +165,7 @@ public class CommandManager {
                 }
                 catch (Exception e)
                 {
-                    stateService.saveState(chatID, StateEnum.WAITING_FOR_INPUT_DESTINATION);
+                    stateService.updateState(chatID, StateEnum.WAITING_FOR_INPUT_DESTINATION);
                 }
                 return "Введите место назначения";
             }

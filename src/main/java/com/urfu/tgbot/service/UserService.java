@@ -24,16 +24,9 @@ public class UserService {
      * Добавляет нового пользователя в базу данных.
      *
      * @param user Пользователь для добавления.
-     * @throws Exception Если пользователь уже существует.
      */
-    public void addUser(User user) throws Exception {
-        Optional<User> userOptional = userRepository.findById(user.getChatID());
-        if (userOptional.isEmpty()) {
-            userRepository.save(user);
-        } else {
-            throw new Exception("user exists");
-        }
-
+    public void addUser(User user){
+        userRepository.save(user);
     }
 
     /**
@@ -47,19 +40,6 @@ public class UserService {
             userRepository.delete(userOptional.get());
         } else {
             throw new Exception("User not exist");
-        }
-    }
-
-    public void changeUser(User user) {
-        try {
-            deleteUser(user);
-        } catch (Exception exception) {
-            System.err.println(exception.getMessage());
-        }
-        try {
-            addUser(user);
-        } catch (Exception exception) {
-            System.err.println(exception.getMessage());
         }
     }
 
@@ -79,12 +59,16 @@ public class UserService {
      * @param trip Поездка для добавления.
      * @param user Пользователь, к которому добавить поездку.
      */
-    public void addTripToUser(Trip trip, User user){
-        User currentUser = userRepository.findById(user.getChatID()).get();
-        trip.deletePassenger(currentUser);
-        userRepository.delete(currentUser);
-        trip.addPassenger(currentUser);
-        currentUser.addTrip(trip);
-        userRepository.save(currentUser);
+    public void addTripToUser(Trip trip, User user) throws Exception {
+        Optional<User> currentUserOptional = userRepository.findById(user.getChatID());
+        if (currentUserOptional.isPresent()) {
+            trip.deletePassenger(currentUserOptional.get());
+            trip.addPassenger(currentUserOptional.get());
+            currentUserOptional.get().addTrip(trip);
+            addUser(currentUserOptional.get());
+        }
+        else {
+            throw new Exception("User not exist");
+        }
     }
 }

@@ -3,21 +3,22 @@ package com.urfu.tgbot.service;
 import com.urfu.tgbot.model.Trip;
 import com.urfu.tgbot.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import com.urfu.tgbot.repository.TripRepository;
-
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
+/**
+ * Класс обслуживания для управления поездками
+ */
 @Service
 public class TripService {
 
@@ -95,10 +96,14 @@ public class TripService {
      * @param chatID Идентификатор чата.
      * @return Поездка по заданному chatID.
      */
-    public Trip getLastTripChatID(long chatID) {
+    public Trip getLastTripChatID(long chatID) throws Exception {
         Iterable<Trip> iterable = () -> tripRepository.findAll().iterator();
         Stream<Trip> stream = StreamSupport.stream(iterable.spliterator(), false);
-        return stream.filter(x -> x.getDriverID() == chatID).max(Comparator.comparing(Trip::getId)).get();
+        Optional<Trip> tripOptional = stream.filter(x -> x.getDriverID() == chatID).max(Comparator.comparing(Trip::getId));
+        if (tripOptional.isPresent()){
+            return tripOptional.get();
+        }
+        throw new Exception("Trip not exist");
     }
 
     /**
@@ -111,6 +116,6 @@ public class TripService {
         trip.addPassenger(user);
         trip.decrementFreePlaces();
         user.addTrip(trip);
-        tripRepository.save(trip);
+        addTrip(trip);
     }
 }
