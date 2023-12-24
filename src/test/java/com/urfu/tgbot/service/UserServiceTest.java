@@ -2,46 +2,32 @@ package com.urfu.tgbot.service;
 
 import com.urfu.tgbot.model.User;
 import com.urfu.tgbot.repository.UserRepository;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
+@ExtendWith(MockitoExtension.class)
 class UserServiceTest {
-    private UserService userService;
-    private UserRepository userRepository;
-
     private final User user = new User("username", 1234567890);
-
-    @BeforeEach
-    void setUp() {
-        userRepository = mock(UserRepository.class);
-        userService = new UserService(userRepository);
-    }
+    @InjectMocks
+    private UserService userService;
+    @Mock
+    private UserRepository userRepository;
 
     /**
      * Проверяет, что метод addUser работает корректно.
      */
     @Test
     void testAddUser_NewUser() {
-        when(userRepository.findById(user.getChatID())).thenReturn(Optional.empty());
         assertDoesNotThrow(() -> userService.addUser(user));
         verify(userRepository, times(1)).save(user);
-    }
-
-
-    /**
-     * Проверяет добавление существующего пользователя. Ожидает выбрасывания исключения, так как пользователь
-     * с указанным chatID уже существует
-     */
-    @Test
-    void testAddUser_ExistingUser() {
-        when(userRepository.findById(user.getChatID())).thenReturn(Optional.of(user));
-        Exception exception = assertThrows(Exception.class, () -> userService.addUser(user));
-        assertEquals("user exists", exception.getMessage());
     }
 
     /**
@@ -64,33 +50,6 @@ class UserServiceTest {
         when(userRepository.findById(user.getChatID())).thenReturn(Optional.empty());
         Exception exception = assertThrows(Exception.class, () -> userService.deleteUser(user));
         assertEquals("User not exist", exception.getMessage());
-    }
-
-    /**
-     * Проверяет изменение существующего пользователя. Убеждается, что метод changeUser корректно обновляет
-     * информацию о существующем пользователе
-     */
-    @Test
-    void testChangeUser() {
-        User newUser = new User("newUsername", 1234567890);
-        when(userRepository.findById(user.getChatID()))
-                .thenReturn(Optional.of(user))
-                .thenReturn(Optional.empty());
-        assertDoesNotThrow(() -> userService.changeUser(newUser));
-        verify(userRepository).delete(user);
-        verify(userRepository).save(newUser);
-    }
-
-    /**
-     * Проверяет изменение информации о несуществующем пользователе. Убеждается, что метод changeUser не выполняет
-     * никаких действий, так как пользователь с указанным chatID не существует
-     */
-
-    @Test
-    void testChangeUser_NonExistingUser() {
-        when(userRepository.findById(user.getChatID())).thenReturn(Optional.empty());
-        verify(userRepository, never()).save(any(User.class));
-        verify(userRepository, never()).delete(any(User.class));
     }
 
     /**

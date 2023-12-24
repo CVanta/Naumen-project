@@ -57,4 +57,3 @@ public class EditCommand {
         return "Бот ожидает следующей команды";
     }
 }
-

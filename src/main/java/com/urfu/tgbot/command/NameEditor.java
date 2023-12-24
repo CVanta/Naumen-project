@@ -36,11 +36,7 @@ public class NameEditor {
         } catch (IllegalArgumentException exception) {
             return exception.getMessage();
         }
-        try {
-            userService.addUser(user);
-        } catch (Exception e) {
-            userService.changeUser(user);
-        }
+        userService.addUser(user);
         stateService.updateState(chatID, StateEnum.WAITING_FOR_INPUT_PHONE_NUMBER);
         return "Введите номер телефона";
     }
@@ -61,7 +57,7 @@ public class NameEditor {
         }
         User user = userService.getUserByChatID(chatID);
         User newUser = new User(user.getUsername(), chatID, institute, user.getPhoneNumber());
-        userService.changeUser(user);
+        userService.addUser(user);
         stateService.updateState(chatID, StateEnum.WAITING_FOR_COMMAND);
         return "Вы успешно зарегистрировались. Ваш профиль:" + newUser.getFormattedString();
     }
@@ -82,7 +78,7 @@ public class NameEditor {
         }
         User user = userService.getUserByChatID(chatID);
         User newUser = new User(user.getUsername(), chatID, user.getInstitute(), phoneNumber);
-        userService.changeUser(newUser);
+        userService.addUser(newUser);
         stateService.updateState(chatID, StateEnum.WAITING_FOR_INPUT_INSTITUTE);
         return "Введите ваш институт";
     }

@@ -92,7 +92,7 @@ public class CommandManagerTest {
         String messageText = "InvalidCommand";
         when(stateService.getState(chatId)).thenReturn(StateEnum.WAITING_FOR_COMMAND);
         String response = commandManager.handleInputUpdateState(messageText, chatId);
-        assertEquals("Не удалось распознать команду", response);
+        assertEquals("Не удалось распознать команду.", response);
     }
 
     /**

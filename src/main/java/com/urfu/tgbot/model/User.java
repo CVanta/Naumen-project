@@ -1,8 +1,9 @@
 package com.urfu.tgbot.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Класс сущности, представляющий пользователя Telegram-бота.
@@ -12,6 +13,11 @@ import jakarta.persistence.Table;
 public class User {
 
     private String username;
+
+    @ManyToMany(fetch = FetchType.EAGER)
+    private List<Trip> tripList;
+
+    private String tgUsername;
 
     @Id
     private long chatID;
@@ -39,6 +45,19 @@ public class User {
         this.phoneNumber = phoneNumber;
     }
 
+    public User(String username, String tgUsername, long chatID, String phoneNumber) {
+        this.username = username;
+        this.tgUsername = tgUsername;
+        this.chatID = chatID;
+        this.phoneNumber = phoneNumber;
+    }
+
+    public User(String username, long chatID, String tgUsername) {
+        this.username = username;
+        this.chatID = chatID;
+        this.tgUsername = tgUsername;
+    }
+
     public String getInstitute() {
         return institute;
     }
@@ -50,6 +69,38 @@ public class User {
      */
     public String getPhoneNumber() {
         return phoneNumber;
+    }
+
+    /**
+     * Добавление поездки к пользователю.
+     * @param trip поездка которую надо добавить.
+     */
+    public void addTrip(Trip trip) {
+        if (this.tripList == null)
+            tripList = new ArrayList<>();
+        this.tripList.add(trip);
+        trip.getPassengers().add(this);
+    }
+
+    /**
+     * Удаление поездки у пользователя.
+     * @param trip поездка которую надо удалить.
+     */
+    public void removeTrip(Trip trip) {
+        if (this.tripList == null) {
+            this.tripList = new ArrayList<>();
+            return;
+        }
+        this.tripList.remove(trip);
+        trip.getPassengers().remove(this);
+    }
+
+    /**
+     * Возвращает список поездок пользователя
+     * @return список поездок пользователя
+     */
+    public List<Trip> getTripList() {
+        return tripList;
     }
 
     /**
@@ -69,8 +120,22 @@ public class User {
         return username;
     }
 
+    /**
+     * Возвращает уникальный идентификатор пользователя.
+     *
+     * @return Уникальный идентификатор пользователя.
+     */
     public long getChatID() {
         return chatID;
+    }
+
+    /**
+     * Возвращает Telegram-имя пользователя.
+     *
+     * @return Telegram-имя пользователя.
+     */
+    public String getTgUsername() {
+        return tgUsername;
     }
 
     @Override

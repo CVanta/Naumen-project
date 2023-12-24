@@ -1,17 +1,12 @@
 package com.urfu.tgbot.command;
 
+
 import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-/**
- * Модульные тесты для класса `StartCommand`.
- */
 public class StartCommandTest {
 
-    /**
-     * Проверяет, что метод `GetBotText()` отправляет нужный текст.
-     */
     @Test
     public void testGetBotText() {
         StartCommand startCommand = new StartCommand();

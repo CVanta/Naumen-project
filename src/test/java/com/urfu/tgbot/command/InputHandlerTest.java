@@ -3,13 +3,12 @@ package com.urfu.tgbot.command;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.*;
 
-/**
- * Модульные тесты для класса `InputHandler`.
- */
+
 public class InputHandlerTest {
+
+    private final InputHandler inputHandler = new InputHandler();
 
     /**
      * Проверяет, что метод checkFullName выбрасывает исключение IllegalArgumentException
@@ -17,8 +16,8 @@ public class InputHandlerTest {
      */
     @Test
     public void testCheckFullNameWordCount() {
-        InputHandler inputHandler = new InputHandler();
-        Exception exception = assertThrows(IllegalArgumentException.class, () -> inputHandler.checkFullName("Иванов Иван"));
+        Exception exception = assertThrows(IllegalArgumentException.class,
+                () -> inputHandler.checkFullName("Иванов Иван"));
         Assertions.assertEquals("Ввод должен содержать три слова", exception.getMessage());
     }
 
@@ -29,7 +28,6 @@ public class InputHandlerTest {
      */
     @Test
     public void testCheckFullNameCapitalLetters() {
-        InputHandler inputHandler = new InputHandler();
         IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
                 () -> inputHandler.checkFullName("иванов Иван Иванович"));
         Assertions.assertEquals("Каждое слово должно начинаться с заглавной буквы", exception.getMessage());
@@ -41,7 +39,6 @@ public class InputHandlerTest {
      */
     @Test
     public void testCheckFullNameRussianLetters() {
-        InputHandler inputHandler = new InputHandler();
         IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
                 () -> inputHandler.checkFullName("Ivanov Ivan Ivanovich"));
         Assertions.assertEquals("Каждое слово должно состоять из русских букв", exception.getMessage());
@@ -54,7 +51,6 @@ public class InputHandlerTest {
      */
     @Test
     public void testCheckPhoneNumberLengthAndFormat() {
-        InputHandler inputHandler = new InputHandler();
         IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
                 () -> inputHandler.checkPhoneNumber("1234567890"));
         Assertions.assertEquals("Номер должен состоять из 11 цифр и начинаться с 7", exception.getMessage());
@@ -67,10 +63,9 @@ public class InputHandlerTest {
      */
     @Test
     public void testCheckPhoneNumberDigitsOnly() {
-        InputHandler inputHandler = new InputHandler();
         IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
                 () -> inputHandler.checkPhoneNumber("721313a7890"));
-        Assertions.assertEquals("Номер должен содержать только цифры", exception.getMessage());
+        assertEquals("Номер должен содержать только цифры", exception.getMessage());
     }
 
 
@@ -80,10 +75,9 @@ public class InputHandlerTest {
      */
     @Test
     public void testCheckInstituteFullName() {
-        InputHandler inputHandler = new InputHandler();
         IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
                 () -> inputHandler.checkInstitute("Институт естественных наук и математики"));
-        Assertions.assertEquals("Введите название института аббревиатурой", exception.getMessage());
+        assertEquals("Введите название института аббревиатурой", exception.getMessage());
     }
 
     /**
@@ -92,10 +86,9 @@ public class InputHandlerTest {
      */
     @Test
     public void testCheckInstituteEmptyValue() {
-        InputHandler inputHandler = new InputHandler();
         IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
                 () -> inputHandler.checkInstitute(" "));
-        Assertions.assertEquals("Введенное значение не может быть пустым", exception.getMessage());
+        assertEquals("Введенное значение не может быть пустым", exception.getMessage());
     }
 
     /**
@@ -104,10 +97,9 @@ public class InputHandlerTest {
      */
     @Test
     public void testCheckInstituteRussianLetters() {
-        InputHandler inputHandler = new InputHandler();
         IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
                 () -> inputHandler.checkInstitute("ugi"));
-        Assertions.assertEquals("Введите название института русскими буквами", exception.getMessage());
+        assertEquals("Введенное значение не соответствует формату института", exception.getMessage());
     }
 
     /**
@@ -115,11 +107,93 @@ public class InputHandlerTest {
      */
     @Test
     public void testCheckYesNo() {
-        InputHandler inputHandler = new InputHandler();
         assertDoesNotThrow(() -> inputHandler.checkYesNo("Нет"));
         assertDoesNotThrow(() -> inputHandler.checkYesNo("Да"));
         IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
                 () -> inputHandler.checkYesNo("No"));
         Assertions.assertEquals("Строка должна быть 'Да' или 'Нет'", exception.getMessage());
     }
+
+    /**
+     * Проверяет формат даты и времени. Убеждается, что метод checkDateFormat выбрасывает исключение
+     * IllegalArgumentException, если формат даты и времени неверный.
+     */
+
+    @Test
+    public void testCheckDateFormat() {
+        InputHandler inputHandler = new InputHandler();
+        assertDoesNotThrow(() -> inputHandler.checkDateFormat("29-12-23 08:30"));
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
+                () -> inputHandler.checkDateFormat("31/12/2023 12:00"));
+        Assertions.assertEquals("Неверный формат даты и времени", exception.getMessage());
+    }
+
+    /**
+     * Проверяет, что метод checkDateFormat выбрасывает исключение IllegalArgumentException,
+     * если указанная дата находится в прошлом.
+     */
+    @Test
+    public void testCheckDateFormatWithDateInPast() {
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
+                () -> inputHandler.checkDateFormat("31-12-1970 12:00"));
+        Assertions.assertEquals("Невозможно создать поездку в прошлом", exception.getMessage());
+    }
+
+    /**
+     * Проверяет валидацию количества мест. Убеждается, что метод checkPlaces выбрасывает исключение
+     * IllegalArgumentException, если количество мест больше 10 или меньше 1.
+     */
+
+    @Test
+    public void testCheckPlaces() {
+        assertDoesNotThrow(() -> inputHandler.checkPlaces("5"));
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
+                () -> inputHandler.checkPlaces("10"));
+        Assertions.assertEquals("Число должно быть меньше 10 и больше ноля", exception.getMessage());
+        exception = assertThrows(IllegalArgumentException.class,
+                () -> inputHandler.checkPlaces("0"));
+        Assertions.assertEquals("Число должно быть меньше 10 и больше ноля", exception.getMessage());
+    }
+
+    /**
+     * Проверяет метод checkNumberBetween и убеждается, что он выбрасывает исключение,
+     * если переданное число меньше или равно 0.
+     */
+
+    @Test
+    public void testCheckPlacesWithLetters() {
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
+                () -> inputHandler.checkPlaces("1a"));
+        Assertions.assertEquals("Невозможно преобразовать в число", exception.getMessage());
+    }
+
+    /**
+     * Проверяет метод checkNumberBetween и убеждается, что он выбрасывает исключение,
+     * если переданное число, больше заданного опорного значения.
+     */
+
+
+    @Test
+    public void testCheckNumberBetween_ThrowsExceptionWhenNumberToCheckIsZero() {
+        assertDoesNotThrow(() -> inputHandler.checkNumberBetween(1, 1));
+        Exception exception = assertThrows(Exception.class,
+                () -> inputHandler.checkNumberBetween(0, 10));
+        assertEquals("Не сущетсвует поездки с таким номером, выберите поездку из списка.",
+                exception.getMessage());
+    }
+
+    /**
+     * Проверяет метод checkNumberBetween и убеждается, что он выбрасывает исключение
+     * при передаче числа, которое больше заданного опорного значения. Проверяет соответствие сообщения ошибки.
+     */
+
+    @Test
+    public void testCheckNumberBetweenWithGreaterNumber() {
+        Exception exception = assertThrows(Exception.class,
+                () -> inputHandler.checkNumberBetween(12, 10));
+        assertEquals("Не сущетсвует поездки с таким номером, выберите поездку из списка.",
+                exception.getMessage());
+    }
+
+
 }

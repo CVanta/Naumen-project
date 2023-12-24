@@ -1,5 +1,10 @@
 package com.urfu.tgbot.command;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 /**
  * Класс для обработки входных данных, включая проверку ФИО, номера телефона, института и т.д.
  */
@@ -55,9 +60,9 @@ public class InputHandler {
         if (input.length() > 10) {
             throw new IllegalArgumentException("Введите название института аббревиатурой");
         }
-        String regex = "^[А-Яа-яЁё]+(?:\\s[А-Яа-яЁё]+)?$";
+        String regex = "^(?:[А-Яа-яЁё]+(?:\\s[А-Яа-яЁё]+)?)$";
         if (!input.matches(regex)) {
-            throw new IllegalArgumentException("Введите название института русскими буквами");
+            throw new IllegalArgumentException("Введенное значение не соответствует формату института");
         }
     }
 
@@ -71,6 +76,57 @@ public class InputHandler {
     public void checkYesNo(String input) {
         if (!input.equalsIgnoreCase("Да") && !input.equalsIgnoreCase("Нет")) {
             throw new IllegalArgumentException("Строка должна быть 'Да' или 'Нет'");
+        }
+    }
+
+    /**
+     * Метод, выполняющий проверку строки на соответствие формату "DD-MM-YY HH:MM".
+     *
+     * @param dateString Строка для проверки.
+     * @throws IllegalArgumentException Если строка не соответствует формату "DD-MM-YY HH:MM".
+     */
+    public void checkDateFormat(String dateString) throws IllegalArgumentException {
+        DateFormat dateFormat = new SimpleDateFormat("dd-MM-yy HH:mm");
+        Date currentDate = new Date();
+        Date date;
+        try {
+            date = dateFormat.parse(dateString);
+        } catch (ParseException e) {
+            throw new IllegalArgumentException("Неверный формат даты и времени");
+        }
+        if (currentDate.after(date)) {
+            throw new IllegalArgumentException("Невозможно создать поездку в прошлом");
+        }
+    }
+
+    /**
+     * Метод, выполняющий проверку строки на то, является ли она числом меньше 10.
+     *
+     * @param numberString Строка для проверки.
+     * @throws IllegalArgumentException Если строка не является числом меньше 10.
+     * @throws NumberFormatException    Если строка не может быть преобразована в число.
+     */
+
+    public void checkPlaces(String numberString) throws IllegalArgumentException, NumberFormatException {
+        try {
+            int number = Integer.parseInt(numberString);
+            if (number >= 10 || number < 1) {
+                throw new IllegalArgumentException("Число должно быть меньше 10 и больше ноля");
+            }
+        } catch (NumberFormatException e) {
+            throw new NumberFormatException("Невозможно преобразовать в число");
+        }
+    }
+    /**
+     * Проверяет, находится ли указанное число между 0 и заданным числом.
+     *
+     * @param numberToCheck     число для проверки
+     * @param referenceNumber   заданное число, до которого должно быть меньше
+     * @throws Exception        выбрасывается, если число не находится в требуемом диапазоне
+     */
+    public void checkNumberBetween(int numberToCheck, int referenceNumber) throws Exception {
+        if (numberToCheck <= 0 || numberToCheck > referenceNumber) {
+            throw new Exception("Не сущетсвует поездки с таким номером, выберите поездку из списка.");
         }
     }
 }
